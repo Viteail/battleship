@@ -30,16 +30,17 @@ export class Gameboard {
       new Ship(1),
     ];
   }
+
   placeShip(ship, coords) {
     for (let i = 0; i < ship.length; i++) {
       if (coords.vertical === true) {
-        this.board[coords.col + i][coords.row] = "s";
-
-        ship.position.push({ col: coords.col + i, row: coords.row });
-      } else {
         this.board[coords.col][coords.row + i] = "s";
 
         ship.position.push({ col: coords.col, row: coords.row + i });
+      } else {
+        this.board[coords.col + i][coords.row] = "s";
+
+        ship.position.push({ col: coords.col + i, row: coords.row });
       }
     }
   }
