@@ -98,4 +98,66 @@ describe("ship in gameboard", () => {
 
     expect(gameboard.hasBeenShot({ col: 0, row: 0 })).toBe(true);
   });
+
+  describe("is valid place for ship", () => {
+    test("can place where is water and no ships around", () => {
+      let gameboard = new Gameboard();
+      let ship = gameboard.ships[0];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      };
+
+      expect(gameboard.isValidPlace(ship, coords)).toBe(true);
+    });
+
+    test("can't place where is another ship", () => {
+      let gameboard = new Gameboard();
+      let firstShip = gameboard.ships[0];
+
+      gameboard.placeShip(firstShip, {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+
+      let secondShip = gameboard.ships[1];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      };
+
+      expect(gameboard.isValidPlace(secondShip, coords)).toBe(false);
+    });
+
+    test("can't place where near is another ship", () => {
+      let gameboard = new Gameboard();
+      let firstShip = gameboard.ships[0];
+
+      gameboard.placeShip(firstShip, {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+
+      let secondShip = gameboard.ships[1];
+
+      let coords = {
+        col: 0,
+        row: 1,
+        vertical: false,
+        orizontal: true,
+      };
+
+      expect(gameboard.isValidPlace(secondShip, coords)).toBe(false);
+    });
+  });
 });

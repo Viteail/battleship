@@ -14,6 +14,22 @@ const startGame = () => {
     orizontal: false,
   });
 
+  computer.gameboard.placeShip(computer.gameboard.ships[1], {
+    col: 2,
+    row: 0,
+    vertical: false,
+    orizontal: true,
+  });
+
+  console.log(
+    computer.gameboard.isValidPlace(computer.gameboard.ships[2], {
+      col: 1,
+      row: 0,
+      vertical: true,
+      orizontal: false,
+    }),
+  );
+
   createPageLayout();
 
   const enemyBoard = document.querySelector(".pc-board");
