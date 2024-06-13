@@ -92,11 +92,27 @@ describe("ship in gameboard", () => {
     expect(gameboard.areAllShipsSunk()).toBe(true);
   });
 
-  test("spot has been shoot", () => {
-    let gameboard = new Gameboard();
-    gameboard.receiveAttack({ col: 0, row: 0 });
+  describe("spot has been shoot", () => {
+    test("hit water", () => {
+      let gameboard = new Gameboard();
+      gameboard.receiveAttack({ col: 0, row: 0 });
 
-    expect(gameboard.hasBeenShot({ col: 0, row: 0 })).toBe(true);
+      expect(gameboard.hasBeenShot({ col: 0, row: 0 })).toBe(true);
+    });
+
+    test("hit ship", () => {
+      let gameboard = new Gameboard();
+      let ship = gameboard.ships[0];
+
+      gameboard.placeShip(ship, {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+
+      expect(gameboard.hasBeenShot({ col: 0, row: 0 })).toBe(false);
+    });
   });
 
   describe("is valid place for ship", () => {

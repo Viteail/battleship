@@ -1,20 +1,24 @@
+import { setBoxColor } from "./UI/box";
+
 export const handleBoardClick = (e, board, computer) => {
-  const elements = Array.from(board.children);
-  const elementIndex = elements.indexOf(e.target);
+  if (e.target === board) return;
+
+  const boxes = Array.from(board.children);
+  const boxIndex = boxes.indexOf(e.target);
 
   const coords = {
-    col: isNaN(Number(("" + elementIndex)[1]))
-      ? elementIndex
-      : Number(("" + elementIndex)[1]),
-    row: isNaN(Number(("" + elementIndex)[1]))
-      ? 0
-      : Number(("" + elementIndex)[0]),
+    col: isNaN(Number(("" + boxIndex)[1]))
+      ? boxIndex
+      : Number(("" + boxIndex)[1]),
+    row: isNaN(Number(("" + boxIndex)[1])) ? 0 : Number(("" + boxIndex)[0]),
   };
 
-  computer.gameboard.receiveAttack(coords);
-  if (computer.gameboard.board[coords.col][coords.row] === "x")
-    elements[elementIndex].classList.add("bg-red-400");
-  else elements[elementIndex].classList.add("bg-sky-400");
-  console.log(coords.col, coords.row);
-  console.log(computer.gameboard.board[coords.col][coords.row]);
+  if (!computer.gameboard.hasBeenShot(coords)) {
+    computer.gameboard.receiveAttack(coords);
+
+    setBoxColor(
+      boxes[boxIndex],
+      computer.gameboard.board[coords.col][coords.row],
+    );
+  }
 };

@@ -128,6 +128,9 @@ export class Gameboard {
   }
 
   hasBeenShot(coords) {
-    return this.board[coords.col][coords.row] !== "." ? true : false;
+    return this.board[coords.col][coords.row] === "o" ||
+      this.board[coords.col][coords.row] === "x"
+      ? true
+      : false;
   }
 }
