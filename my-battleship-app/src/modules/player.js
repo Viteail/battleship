@@ -4,4 +4,6 @@ export class Player {
   constructor() {
     this.gameboard = new Gameboard();
   }
+
+  attackRandomSpot() {}
 }

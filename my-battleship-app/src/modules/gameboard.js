@@ -46,63 +46,63 @@ export class Gameboard {
   }
 
   isValidPlace(ship, coords) {
+    const isOutOfBoard = ({ col, row }) =>
+      col < 0 || col > 9 || row < 0 || row > 9;
+
     const nearCoords = [];
 
     for (let i = 0; i < ship.length; i++) {
+      let currentCol = coords.vertical ? coords.col : coords.col + i;
+      let currentRow = coords.vertical ? coords.row + i : coords.row;
+
+      if (isOutOfBoard({ col: currentCol, row: currentRow })) return false;
+      if (this.board[currentCol][currentRow] !== ".") return false;
+
       if (coords.vertical) {
-        if (this.board[coords.col][coords.row + i] !== ".") return false;
         if (i === 0)
           nearCoords.push(
-            { col: coords.col - 1, row: coords.row + i - 1 },
-            { col: coords.col, row: coords.row + i - 1 },
-            { col: coords.col + 1, row: coords.row + i - 1 },
+            { col: currentCol - 1, row: currentRow - 1 },
+            { col: currentCol, row: currentRow - 1 },
+            { col: currentCol + 1, row: currentRow - 1 },
           );
 
         nearCoords.push(
-          { col: coords.col - 1, row: coords.row + i },
-          { col: coords.col + 1, row: coords.row + i },
+          { col: currentCol - 1, row: currentRow },
+          { col: currentCol + 1, row: currentRow },
         );
 
         if (i === ship.length - 1)
           nearCoords.push(
-            { col: coords.col - 1, row: coords.row + i + 1 },
-            { col: coords.col, row: coords.row + i + 1 },
-            { col: coords.col + 1, row: coords.row + i + 1 },
+            { col: currentCol - 1, row: currentRow + 1 },
+            { col: currentCol, row: currentRow + 1 },
+            { col: currentCol + 1, row: currentRow + 1 },
           );
       } else {
-        if (this.board[coords.col + i][coords.row] !== ".") return false;
         if (i === 0)
           nearCoords.push(
-            { col: coords.col + i - 1, row: coords.row - 1 },
-            { col: coords.col + i - 1, row: coords.row },
-            { col: coords.col + i - 1, row: coords.row + 1 },
+            { col: currentCol - 1, row: currentRow - 1 },
+            { col: currentCol - 1, row: currentRow },
+            { col: currentCol - 1, row: currentRow + 1 },
           );
 
         nearCoords.push(
-          { col: coords.col + i, row: coords.row - 1 },
-          { col: coords.col + i, row: coords.row + 1 },
+          { col: currentCol, row: currentRow - 1 },
+          { col: currentCol, row: currentRow + 1 },
         );
 
         if (i === ship.length - 1)
           nearCoords.push(
-            { col: coords.col + i + 1, row: coords.row - 1 },
-            { col: coords.col + i + 1, row: coords.row },
-            { col: coords.col + i + 1, row: coords.row + 1 },
+            { col: currentCol + 1, row: currentRow - 1 },
+            { col: currentCol + 1, row: currentRow },
+            { col: currentCol + 1, row: currentRow + 1 },
           );
       }
     }
 
-    for (let i = 0; i < nearCoords.length; i++) {
-      if (
-        nearCoords[i].col >= 0 &&
-        nearCoords[i].col <= 9 &&
-        nearCoords[i].row >= 0 &&
-        nearCoords[i].row <= 9
-      )
-        if (this.board[nearCoords[i].col][nearCoords[i].row] === "s")
-          return false;
-    }
-    return true;
+    return nearCoords.every(
+      ({ col, row }) =>
+        isOutOfBoard({ col, row }) || this.board[col][row] !== "s",
+    );
   }
 
   receiveAttack(coords) {

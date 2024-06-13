@@ -175,5 +175,19 @@ describe("ship in gameboard", () => {
 
       expect(gameboard.isValidPlace(secondShip, coords)).toBe(false);
     });
+
+    test("can't place out of the board", () => {
+      let gameboard = new Gameboard();
+      let ship = gameboard.ships[0];
+
+      expect(
+        gameboard.isValidPlace(ship, {
+          col: 8,
+          row: 0,
+          vertical: false,
+          orizontal: true,
+        }),
+      ).toBe(false);
+    });
   });
 });

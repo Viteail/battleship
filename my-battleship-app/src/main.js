@@ -21,14 +21,14 @@ const startGame = () => {
     orizontal: true,
   });
 
-  console.log(
-    computer.gameboard.isValidPlace(computer.gameboard.ships[2], {
-      col: 1,
-      row: 0,
-      vertical: true,
-      orizontal: false,
-    }),
-  );
+  // console.log(
+  //   computer.gameboard.isValidPlace(computer.gameboard.ships[2], {
+  //     col: 0,
+  //     row: 0,
+  //     vertical: false,
+  //     orizontal: true,
+  //   }),
+  // );
 
   createPageLayout();
 
