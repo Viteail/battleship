@@ -1,6 +1,7 @@
 import { setBoxColor } from "./UI/box";
 
-export const handleBoardClick = (e, board, computer) => {
+export const handleBoardClick = (args) => {
+  const { e, board, computer, player, playerBoard } = args;
   if (e.target === board) return;
 
   const boxes = Array.from(board.children);
@@ -20,5 +21,9 @@ export const handleBoardClick = (e, board, computer) => {
       boxes[boxIndex],
       computer.gameboard.board[coords.col][coords.row],
     );
+
+    if (computer.gameboard.board[coords.col][coords.row] === "x") return;
+
+    computer.attackRandomSpot(player.gameboard, playerBoard);
   }
 };
