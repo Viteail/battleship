@@ -1,4 +1,5 @@
 import { Ship } from "./ship";
+import { getShip, isOutOfBoard } from "./utils";
 // . = water
 // x = hit
 // o = miss
@@ -34,11 +35,11 @@ export class Gameboard {
   placeShip(ship, coords) {
     for (let i = 0; i < ship.length; i++) {
       if (coords.vertical) {
-        this.board[coords.col][coords.row + i] = "s";
+        this.board[coords.row + i][coords.col] = "s";
 
         ship.position.push({ col: coords.col, row: coords.row + i });
       } else {
-        this.board[coords.col + i][coords.row] = "s";
+        this.board[coords.row][coords.col + i] = "s";
 
         ship.position.push({ col: coords.col + i, row: coords.row });
       }
@@ -46,9 +47,6 @@ export class Gameboard {
   }
 
   isValidPlace(ship, coords) {
-    const isOutOfBoard = ({ col, row }) =>
-      col < 0 || col > 9 || row < 0 || row > 9;
-
     const nearCoords = [];
 
     for (let i = 0; i < ship.length; i++) {
@@ -56,7 +54,7 @@ export class Gameboard {
       let currentRow = coords.vertical ? coords.row + i : coords.row;
 
       if (isOutOfBoard({ col: currentCol, row: currentRow })) return false;
-      if (this.board[currentCol][currentRow] !== ".") return false;
+      if (this.board[currentRow][currentCol] !== ".") return false;
 
       if (coords.vertical) {
         if (i === 0)
@@ -101,35 +99,30 @@ export class Gameboard {
 
     return nearCoords.every(
       ({ col, row }) =>
-        isOutOfBoard({ col, row }) || this.board[col][row] !== "s",
+        isOutOfBoard({ col, row }) || this.board[row][col] !== "s",
     );
   }
 
   receiveAttack(coords) {
-    for (let i = 0; i < this.ships.length; i++) {
-      for (let j = 0; j < this.ships[i].position.length; j++) {
-        if (
-          this.ships[i].position[j].col === coords.col &&
-          this.ships[i].position[j].row === coords.row
-        ) {
-          this.board[coords.col][coords.row] = "x";
-          this.ships[i].hit();
+    if (this.board[coords.row][coords.col] === "s") {
+      const ship = getShip(coords, this.ships);
 
-          if (this.ships[i].isSunk()) this.ships.splice(i, 1);
-          return;
-        }
-      }
+      this.board[coords.row][coords.col] = "x";
+      ship.hit();
+
+      return;
     }
-    this.board[coords.col][coords.row] = "o";
+
+    this.board[coords.row][coords.col] = "o";
   }
 
   areAllShipsSunk() {
-    return this.ships.length === 0 ? true : false;
+    return this.ships.every((ship) => ship.isSunk());
   }
 
   hasBeenShot(coords) {
-    return this.board[coords.col][coords.row] === "o" ||
-      this.board[coords.col][coords.row] === "x"
+    return this.board[coords.row][coords.col] === "o" ||
+      this.board[coords.row][coords.col] === "x"
       ? true
       : false;
   }

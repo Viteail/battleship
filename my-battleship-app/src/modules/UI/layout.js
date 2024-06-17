@@ -22,7 +22,7 @@ export const createPageLayout = () => {
        <!-- content  -->
         <div>
           <div class='text-center'>Player's name gameboard</div>
-          <div class='grid grid-cols-10 w-[480px] h-[480px] border border-black'>${generateBoxes()}</div>
+          <div class='player-board grid grid-cols-10 w-[480px] h-[480px] border border-black'>${generateBoxes()}</div>
           <div class='text-center'>Ships alive</div>
         </div>
         <div class='text-center p-10 text-3xl'>Player's Move!</div>

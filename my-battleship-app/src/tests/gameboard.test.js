@@ -36,7 +36,7 @@ describe("ship in gameboard", () => {
       ];
 
       for (let i = 0; i < spots.length; i++) {
-        if (gameboard.board[spots[i].col][spots[i].row] !== "s") return false;
+        if (gameboard.board[spots[i].row][spots[i].col] !== "s") return false;
       }
       return true;
     };
@@ -55,7 +55,7 @@ describe("ship in gameboard", () => {
       orizontal: false,
     });
     gameboard.receiveAttack({ col: 1, row: 0 });
-    expect(gameboard.board[1][0]).toBe("o");
+    expect(gameboard.board[0][1]).toBe("o");
   });
 
   test("hit ship", () => {
@@ -69,7 +69,7 @@ describe("ship in gameboard", () => {
       orizontal: false,
     });
     gameboard.receiveAttack({ col: 0, row: 1 });
-    expect(gameboard.board[0][1]).toBe("x");
+    expect(gameboard.board[1][0]).toBe("x");
   });
 
   test("all ships are sunk", () => {

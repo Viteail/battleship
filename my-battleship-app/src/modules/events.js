@@ -1,4 +1,5 @@
 import { setBoxColor } from "./UI/box";
+import { convertIndexToCoords } from "./utils";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -7,22 +8,17 @@ export const handleBoardClick = (args) => {
   const boxes = Array.from(board.children);
   const boxIndex = boxes.indexOf(e.target);
 
-  const coords = {
-    col: isNaN(Number(("" + boxIndex)[1]))
-      ? boxIndex
-      : Number(("" + boxIndex)[1]),
-    row: isNaN(Number(("" + boxIndex)[1])) ? 0 : Number(("" + boxIndex)[0]),
-  };
+  const coords = convertIndexToCoords(boxIndex);
 
   if (!computer.gameboard.hasBeenShot(coords)) {
     computer.gameboard.receiveAttack(coords);
 
     setBoxColor(
       boxes[boxIndex],
-      computer.gameboard.board[coords.col][coords.row],
+      computer.gameboard.board[coords.row][coords.col],
     );
 
-    if (computer.gameboard.board[coords.col][coords.row] === "x") return;
+    if (computer.gameboard.board[coords.row][coords.col] === "x") return;
 
     computer.attackRandomSpot(player.gameboard, playerBoard);
   }
