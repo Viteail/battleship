@@ -3,6 +3,7 @@ import { createPageLayout } from "./modules/UI/layout";
 import { Player } from "./modules/player";
 import { handleBoardClick } from "./modules/events";
 import { showShips } from "./modules/UI/box";
+import { createMenu } from "./modules/UI/menu";
 
 const startGame = () => {
   const player = new Player();
@@ -93,9 +94,10 @@ const startGame = () => {
   });
 
   createPageLayout();
+  createMenu();
 
-  const playerBoard = document.querySelector(".player-board");
-  const enemyBoard = document.querySelector(".pc-board");
+  const playerBoard = document.querySelector("#player-board");
+  const enemyBoard = document.querySelector("#pc-board");
 
   showShips(playerBoard, player.gameboard);
 

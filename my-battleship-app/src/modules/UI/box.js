@@ -1,3 +1,13 @@
+export const generateBoxes = () => {
+  let boxes = "";
+
+  for (let i = 0; i < 100; i++) {
+    boxes += `<div class='box border border-black cursor-pointer hover:scale-110'></div>`;
+  }
+
+  return boxes;
+};
+
 export const setBoxColor = (box, board) => {
   box.classList.remove("bg-slate-700");
   board === "x"
