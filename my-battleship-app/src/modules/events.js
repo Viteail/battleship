@@ -1,5 +1,6 @@
 import { setBoxColor } from "./UI/box";
 import { convertIndexToCoords } from "./utils";
+import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -22,4 +23,9 @@ export const handleBoardClick = (args) => {
 
     computer.attackRandomSpot(player.gameboard, playerBoard);
   }
+};
+
+export const handleNewGameClick = () => {
+  const content = document.querySelector("#content");
+  content.innerHTML = `${createShipPlacementBoard()}`;
 };

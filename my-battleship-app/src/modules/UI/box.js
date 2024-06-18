@@ -2,7 +2,7 @@ export const generateBoxes = () => {
   let boxes = "";
 
   for (let i = 0; i < 100; i++) {
-    boxes += `<div class='box border border-black cursor-pointer hover:scale-110'></div>`;
+    boxes += `<div class='border border-black cursor-pointer hover:bg-gray-200'></div>`;
   }
 
   return boxes;
@@ -20,7 +20,7 @@ export const showShips = (boardElement, gameboard) => {
     for (let col = 0; col < gameboard.board.length; col++) {
       if (gameboard.board[row][col] === "s")
         Array.from(boardElement.children)[Number("" + row + col)].classList.add(
-          "bg-slate-700",
+          "bg-slate-700 border-4 border-slate-500",
         );
     }
   }

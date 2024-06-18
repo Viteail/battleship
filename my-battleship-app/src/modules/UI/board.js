@@ -1,3 +1,5 @@
+import { generateBoxes } from "./box";
+
 export const createPlayerBoard = () =>
   `<div>
      <div class='text-center'>Player's name gameboard</div>
