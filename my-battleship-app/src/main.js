@@ -6,8 +6,8 @@ import { showShips } from "./modules/UI/box";
 import { createMenu } from "./modules/UI/menu";
 
 const startGame = () => {
-  const player = new Player();
-  const computer = new Player();
+  // const player = new Player();
+  // const computer = new Player();
 
   // computer.gameboard.placeShip(computer.gameboard.ships[0], {
   //   col: 0,
@@ -92,7 +92,6 @@ const startGame = () => {
   //   vertical: true,
   //   orizontal: false,
   // });
-
   createPageLayout();
   createMenu();
 

@@ -189,5 +189,28 @@ describe("ship in gameboard", () => {
         }),
       ).toBe(false);
     });
+
+    test("can't place near ships #2", () => {
+      let gameboard = new Gameboard();
+
+      let firstShip = gameboard.ships[0];
+      let secondShip = gameboard.ships[8];
+
+      gameboard.placeShip(secondShip, {
+        col: 9,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      });
+
+      expect(
+        gameboard.isValidPlace(firstShip, {
+          col: 6,
+          row: 0,
+          vertical: false,
+          orizontal: true,
+        }),
+      ).toBe(false);
+    });
   });
 });
