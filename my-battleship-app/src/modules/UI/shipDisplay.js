@@ -16,3 +16,7 @@ export const appendShip = (boxElm, ship, count) => {
   const shipElm = document.querySelector(`#l${ship.length}-${count}`);
   appendDragEvent(shipElm);
 };
+
+export const removeShip = (boxElm, shipElm) => {
+  boxElm.removeChild(shipElm);
+};

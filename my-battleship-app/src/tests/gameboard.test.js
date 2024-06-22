@@ -212,6 +212,29 @@ describe("ship in gameboard", () => {
         }),
       ).toBe(false);
     });
+
+    test("can't place on ship", () => {
+      let gameboard = new Gameboard();
+
+      let firstShip = gameboard.ships[0];
+      let secondShip = gameboard.ships[8];
+
+      gameboard.placeShip(firstShip, {
+        col: 3,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+
+      expect(
+        gameboard.isValidPlace(secondShip, {
+          col: 3,
+          row: 0,
+          vertical: true,
+          orizontal: false,
+        }),
+      ).toBe(false);
+    });
   });
 
   describe("retrieve ship", () => {

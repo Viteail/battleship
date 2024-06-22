@@ -44,6 +44,9 @@ export const drag = (e) => {
 
 export const drop = (e, shipPlacement) => {
   e.preventDefault();
+
+  if (e.target.parentElement.children.length !== 100) return;
+
   const data = e.dataTransfer.getData("text/plain");
   const elm = document.querySelector(`#${data}`);
 
