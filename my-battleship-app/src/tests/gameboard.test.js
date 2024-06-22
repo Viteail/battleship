@@ -213,4 +213,119 @@ describe("ship in gameboard", () => {
       ).toBe(false);
     });
   });
+
+  describe("retrieve ship", () => {
+    test("retrive 4 length ship on orizontal", () => {
+      let gameboard = new Gameboard();
+
+      let ship = gameboard.ships[0];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      };
+
+      let spots = [
+        { col: 0, row: 0 },
+        { col: 1, row: 0 },
+        { col: 2, row: 0 },
+        { col: 3, row: 0 },
+      ];
+
+      gameboard.placeShip(ship, coords);
+
+      gameboard.retrieveShip(coords, ship);
+
+      expect(spots.every((c) => gameboard.board[c.row][c.col] === ".")).toBe(
+        true,
+      );
+    });
+
+    test("retrieve 4 length ship on vertical", () => {
+      let gameboard = new Gameboard();
+
+      let ship = gameboard.ships[0];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      };
+
+      let spots = [
+        { col: 0, row: 0 },
+        { col: 0, row: 1 },
+        { col: 0, row: 2 },
+        { col: 0, row: 3 },
+      ];
+
+      gameboard.placeShip(ship, coords);
+
+      gameboard.retrieveShip(coords, ship);
+
+      expect(spots.every((c) => gameboard.board[c.row][c.col] === ".")).toBe(
+        true,
+      );
+    });
+
+    test("retrieve 1 length ship", () => {
+      let gameboard = new Gameboard();
+
+      let ship = gameboard.ships[8];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      };
+
+      gameboard.placeShip(ship, coords);
+
+      gameboard.retrieveShip(coords, ship);
+
+      expect(gameboard.board[0][0] === ".").toBe(true);
+    });
+
+    test("retrieve 3 length ship and place to a new position", () => {
+      let gameboard = new Gameboard();
+
+      let ship = gameboard.ships[1];
+
+      let coords = {
+        col: 0,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      };
+
+      gameboard.placeShip(ship, coords);
+
+      gameboard.retrieveShip(coords, ship);
+
+      let newCoords = {
+        col: 1,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      };
+
+      let spots = [
+        { col: 1, row: 0 },
+        { col: 1, row: 1 },
+        { col: 1, row: 2 },
+      ];
+
+      gameboard.placeShip(ship, newCoords);
+
+      expect(
+        ship.position.every(
+          (c, i) => c.row === spots[i].row && c.col === spots[i].col,
+        ),
+      ).toBe(true);
+    });
+  });
 });

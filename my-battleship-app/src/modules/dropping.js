@@ -47,5 +47,8 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
 };
 
 export const redropShip = (box, shipElm, shipPlacement) => {
+  const shipPlacementBoard = box.parentElement;
+  const boxes = Array.from(shipPlacementBoard.children);
+
   console.log(shipElm);
 };

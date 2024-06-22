@@ -126,4 +126,12 @@ export class Gameboard {
       ? true
       : false;
   }
+
+  retrieveShip(coords, ship) {
+    for (let i = 0; i < ship.length; i++) {
+      if (coords.vertical) this.board[coords.row + i][coords.col] = ".";
+      else this.board[coords.row][coords.col + i] = ".";
+    }
+    ship.position = [];
+  }
 }
