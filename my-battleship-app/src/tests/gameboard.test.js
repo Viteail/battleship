@@ -351,4 +351,75 @@ describe("ship in gameboard", () => {
       ).toBe(true);
     });
   });
+
+  describe("gameboard reset", () => {
+    test("with 1 ship", () => {
+      let gameboard = new Gameboard();
+
+      let ship = gameboard.ships[8];
+
+      gameboard.placeShip(ship, {
+        col: 6,
+        row: 0,
+        vertical: true,
+        orizontal: false,
+      });
+
+      gameboard.reset();
+
+      expect(gameboard.ships.every((s) => s.position.length === 0)).toBe(true);
+    });
+
+    test("with 2 ships", () => {
+      let gameboard = new Gameboard();
+
+      let firstShip = gameboard.ships[0];
+      let secondShip = gameboard.ships[1];
+
+      gameboard.placeShip(firstShip, {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+      gameboard.placeShip(secondShip, {
+        col: 0,
+        row: 2,
+        vertical: true,
+        orizontal: false,
+      });
+
+      gameboard.reset();
+
+      expect(gameboard.ships.every((ship) => ship.position.length === 0)).toBe(
+        true,
+      );
+    });
+
+    test("board should be empty", () => {
+      let gameboard = new Gameboard();
+
+      let firstShip = gameboard.ships[0];
+      let secondShip = gameboard.ships[1];
+
+      gameboard.placeShip(firstShip, {
+        col: 0,
+        row: 0,
+        vertical: false,
+        orizontal: true,
+      });
+      gameboard.placeShip(secondShip, {
+        col: 0,
+        row: 2,
+        vertical: true,
+        orizontal: false,
+      });
+
+      gameboard.reset();
+
+      expect(
+        gameboard.board.every((row) => row.every((col) => col === ".")),
+      ).toBe(true);
+    });
+  });
 });

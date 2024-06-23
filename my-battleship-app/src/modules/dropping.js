@@ -1,20 +1,17 @@
-import { Player } from "./player";
 import { drop, allowDrop } from "./events";
 import { convertIndexToCoords, getShip, locateShipBox } from "./utils";
 import { appendShip, removeShip } from "./UI/shipDisplay";
 
-export const appendDropEvents = () => {
-  const shipPlacement = new Player();
+export const appendDropEvents = (shipPlacement) => {
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
 
-  const shipPlacementBoard = document.querySelector("#ship-placement-board");
-
-  shipPlacementBoard.addEventListener("drop", (e) => drop(e, shipPlacement));
-  shipPlacementBoard.addEventListener("dragover", (e) => allowDrop(e));
+  shipPlacementElm.addEventListener("drop", (e) => drop(e, shipPlacement));
+  shipPlacementElm.addEventListener("dragover", (e) => allowDrop(e));
 };
 
 export const dropShip = (box, shipElm, shipPlacement, countElm) => {
-  const shipPlacementBoard = box.parentElement;
-  const boxes = Array.from(shipPlacementBoard.children);
+  const shipPlacementElm = box.parentElement;
+  const boxes = Array.from(shipPlacementElm.children);
 
   const shipLength = shipElm.children.length;
   const ship = shipPlacement.gameboard.ships.find(
@@ -43,8 +40,8 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
 };
 
 export const redropShip = (box, shipElm, shipPlacement) => {
-  const shipPlacementBoard = box.parentElement;
-  const boxes = Array.from(shipPlacementBoard.children);
+  const shipPlacementElm = box.parentElement;
+  const boxes = Array.from(shipPlacementElm.children);
 
   const initialBox = locateShipBox(boxes, shipElm);
   const initialCoords = convertIndexToCoords(boxes.indexOf(initialBox));

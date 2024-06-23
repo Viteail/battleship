@@ -92,12 +92,14 @@ const startGame = () => {
   //   vertical: true,
   //   orizontal: false,
   // });
+  const shipPlacement = new Player();
+
   createPageLayout();
   createMenu();
 
   const newGameBtn = document.querySelector("#new-game");
 
-  newGameBtn.addEventListener("click", handleNewGameClick);
+  newGameBtn.addEventListener("click", () => handleNewGameClick(shipPlacement));
 
   // const playerBoard = document.querySelector("#player-board");
   // const enemyBoard = document.querySelector("#pc-board");

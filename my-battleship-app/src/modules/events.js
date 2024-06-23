@@ -4,6 +4,7 @@ import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
 import { appendShip, removeShip } from "./UI/shipDisplay";
+import { appendResetEvent } from "./reset";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -28,11 +29,14 @@ export const handleBoardClick = (args) => {
   }
 };
 
-export const handleNewGameClick = () => {
+export const handleNewGameClick = (shipPlacement) => {
   const content = document.querySelector("#content");
-  content.innerHTML = `${createShipPlacementBoard()}`;
-  appendDropEvents();
+  createShipPlacementBoard(content);
+
+  appendDropEvents(shipPlacement);
   appendDragEvents();
+
+  appendResetEvent(shipPlacement);
 };
 
 export const allowDrop = (e) => {
@@ -91,4 +95,22 @@ export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
     appendShip(boxElm, ship, count, shipPlacement);
   } else shipPlacement.gameboard.placeShip(ship, coords);
   console.log(shipPlacement.board);
+};
+
+export const resetBoard = (shipPlacement) => {
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
+  const boxes = Array.from(shipPlacementElm.children);
+
+  for (let i = 0; i < boxes.length; i++) {
+    if (boxes[i].firstElementChild) {
+      const shipLength = boxes[i].firstElementChild.children.length;
+      const countElm = document.querySelector(`#l${shipLength}-count`);
+
+      countElm.textContent = `${shipPlacement.gameboard.ships.filter((ship) => ship.length === shipLength).length}x`;
+
+      removeShip(boxes[i], boxes[i].firstElementChild);
+    }
+  }
+
+  shipPlacement.gameboard.reset();
 };

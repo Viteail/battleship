@@ -134,4 +134,12 @@ export class Gameboard {
     }
     ship.position = [];
   }
+
+  reset() {
+    this.ships.forEach((ship) => (ship.position = []));
+
+    for (let row = 0; row < this.board.length; row++)
+      for (let col = 0; col < this.board.length; col++)
+        this.board[row][col] = ".";
+  }
 }

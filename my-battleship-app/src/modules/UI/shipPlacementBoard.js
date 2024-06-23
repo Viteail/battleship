@@ -1,6 +1,7 @@
 import { generateBoxes } from "./box";
 
-export const createShipPlacementBoard = () => `
+export const createShipPlacementBoard = (content) => {
+  content.innerHTML = `
     <div class='flex gap-20'>
       <div class='flex flex-col gap-10'>
         <div>
@@ -54,3 +55,4 @@ export const createShipPlacementBoard = () => `
       </div>
     </div>
 `;
+};
