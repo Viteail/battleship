@@ -34,7 +34,7 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
     })
   ) {
     shipPlacement.gameboard.placeShip(ship, coords);
-    appendShip(box, ship, countElm.textContent[0]);
+    appendShip(box, ship, countElm.textContent[0], shipPlacement);
 
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
@@ -69,15 +69,29 @@ export const redropShip = (box, shipElm, shipPlacement) => {
         : false,
   };
 
-  shipPlacement.gameboard.retrieveShip(initialCoords, ship);
+  shipPlacement.gameboard.retrieveShip(
+    {
+      col: initialCoords.col,
+      row: initialCoords.row,
+      vertical: directionalCoords.vertical,
+      orizontal: directionalCoords.orizontal,
+    },
+    ship,
+  );
 
   if (shipPlacement.gameboard.isValidPlace(ship, directionalCoords)) {
     removeShip(initialBox, shipElm);
 
-    shipPlacement.gameboard.placeShip(ship, coords);
+    shipPlacement.gameboard.placeShip(ship, directionalCoords);
 
-    appendShip(box, ship, count);
+    appendShip(box, ship, count, shipPlacement);
 
     console.log(shipPlacement.gameboard.board);
-  } else shipPlacement.gameboard.placeShip(ship, initialCoords);
+  } else
+    shipPlacement.gameboard.placeShip(ship, {
+      col: initialCoords.col,
+      row: initialCoords.row,
+      vertical: directionalCoords.vertical,
+      orizontal: directionalCoords.orizontal,
+    });
 };
