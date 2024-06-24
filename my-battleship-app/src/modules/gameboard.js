@@ -1,5 +1,5 @@
 import { Ship } from "./ship";
-import { getShip, isOutOfBoard } from "./utils";
+import { getShip, isOutOfBoard, getRandomNumber } from "./utils";
 // . = water
 // x = hit
 // o = miss
@@ -141,5 +141,23 @@ export class Gameboard {
     for (let row = 0; row < this.board.length; row++)
       for (let col = 0; col < this.board.length; col++)
         this.board[row][col] = ".";
+  }
+
+  randomShipPlacement() {
+    for (let i = 0; i < this.ships.length; i++) {
+      const coords = {
+        col: getRandomNumber(10),
+        row: getRandomNumber(10),
+        vertical: getRandomNumber(2) ? true : false,
+      };
+
+      while (!this.isValidPlace(this.ships[i], coords)) {
+        coords.col = getRandomNumber(10);
+        coords.row = getRandomNumber(10);
+        coords.vertical = getRandomNumber(2) ? true : false;
+      }
+
+      this.placeShip(this.ships[i], coords);
+    }
   }
 }

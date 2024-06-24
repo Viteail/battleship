@@ -3,6 +3,9 @@ export const convertIndexToCoords = (index) => ({
   row: ("" + index).length === 1 ? 0 : Number(("" + index)[0]),
 });
 
+export const convertCoordsToIndex = (coords) =>
+  Number("" + coords.row + coords.col);
+
 export const getRandomNumber = (max) => Math.floor(Math.random() * max);
 
 export const getShip = (coords, ships) => {

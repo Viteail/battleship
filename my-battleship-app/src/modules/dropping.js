@@ -1,6 +1,6 @@
 import { drop, allowDrop } from "./events";
 import { convertIndexToCoords, getShip, locateShipBox } from "./utils";
-import { appendShip, removeShip } from "./UI/shipDisplay";
+import { displayShip, removeShip } from "./UI/shipDisplay";
 
 export const appendDropEvents = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
@@ -31,7 +31,7 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
     })
   ) {
     shipPlacement.gameboard.placeShip(ship, coords);
-    appendShip(box, ship, countElm.textContent[0], shipPlacement);
+    displayShip(box, ship, countElm.textContent[0], shipPlacement);
 
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
@@ -81,7 +81,7 @@ export const redropShip = (box, shipElm, shipPlacement) => {
 
     shipPlacement.gameboard.placeShip(ship, directionalCoords);
 
-    appendShip(box, ship, count, shipPlacement);
+    displayShip(box, ship, count, shipPlacement);
 
     console.log(shipPlacement.gameboard.board);
   } else
