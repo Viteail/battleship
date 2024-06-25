@@ -1,5 +1,5 @@
 import { displayShips } from "./UI/shipDisplay";
-import { resetBoard, handleStartBattle } from "./events";
+import { resetBoard, handleStartBattle, handleBoardClick } from "./events";
 
 export const appendRandomEvent = (shipPlacement) => {
   const randomBtn = document.querySelector("#random");
@@ -21,4 +21,21 @@ export const appendStartEvent = (shipPlacement) => {
   const startBtn = document.querySelector("#start");
 
   startBtn.addEventListener("click", () => handleStartBattle(shipPlacement));
+};
+
+export const appendComputerBoardEvent = (
+  computerBoard,
+  computer,
+  playerBoard,
+  player,
+) => {
+  computerBoard.addEventListener("click", (e) => {
+    handleBoardClick({
+      e: e,
+      board: computerBoard,
+      computer: computer,
+      player: player,
+      playerBoard: playerBoard,
+    });
+  });
 };

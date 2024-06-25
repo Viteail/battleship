@@ -8,8 +8,10 @@ import {
   appendResetEvent,
   appendStartEvent,
   appendRandomEvent,
+  appendComputerBoardEvent,
 } from "./append";
 import { createBattleLayout } from "./UI/battleLayout";
+import { Player } from "./player";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -125,7 +127,22 @@ export const resetBoard = (shipPlacement) => {
 };
 
 export const handleStartBattle = (shipPlacement) => {
-  const content = document.querySelector("#content");
+  if (!shipPlacement.gameboard.ships.every((ship) => ship.position.length > 0))
+    return;
 
+  const content = document.querySelector("#content");
   createBattleLayout(content);
+
+  const player = new Player();
+  const computer = new Player();
+
+  player.gameboard.board = [...shipPlacement.gameboard.board];
+  player.gameboard.ships = [...shipPlacement.gameboard.ships];
+
+  computer.gameboard.randomShipPlacement();
+
+  const playerBoard = document.querySelector("#player-board");
+  const computerBoard = document.querySelector("#pc-board");
+
+  appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
 };

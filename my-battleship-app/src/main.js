@@ -1,97 +1,10 @@
 import "./styles.css";
 import { createPageLayout } from "./modules/UI/pageLayout";
 import { Player } from "./modules/player";
-import { handleBoardClick, handleNewGameClick } from "./modules/events";
-import { showShips } from "./modules/UI/box";
+import { handleNewGameClick } from "./modules/events";
 import { createMenu } from "./modules/UI/menu";
 
 const startGame = () => {
-  // const player = new Player();
-  // const computer = new Player();
-
-  // computer.gameboard.placeShip(computer.gameboard.ships[0], {
-  //   col: 0,
-  //   row: 0,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // computer.gameboard.placeShip(computer.gameboard.ships[1], {
-  //   col: 2,
-  //   row: 0,
-  //   vertical: false,
-  //   orizontal: true,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[0], {
-  //   col: 0,
-  //   row: 0,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[1], {
-  //   col: 2,
-  //   row: 1,
-  //   vertical: false,
-  //   orizontal: true,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[2], {
-  //   col: 6,
-  //   row: 0,
-  //   vertical: false,
-  //   orizontal: true,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[3], {
-  //   col: 2,
-  //   row: 3,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[4], {
-  //   col: 9,
-  //   row: 2,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[5], {
-  //   col: 2,
-  //   row: 7,
-  //   vertical: false,
-  //   orizontal: true,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[6], {
-  //   col: 5,
-  //   row: 3,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[7], {
-  //   col: 7,
-  //   row: 2,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[8], {
-  //   col: 7,
-  //   row: 4,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
-  //
-  // player.gameboard.placeShip(player.gameboard.ships[9], {
-  //   col: 6,
-  //   row: 6,
-  //   vertical: true,
-  //   orizontal: false,
-  // });
   const shipPlacement = new Player();
 
   createPageLayout();
@@ -100,23 +13,6 @@ const startGame = () => {
   const newGameBtn = document.querySelector("#new-game");
 
   newGameBtn.addEventListener("click", () => handleNewGameClick(shipPlacement));
-
-  // const playerBoard = document.querySelector("#player-board");
-  // const enemyBoard = document.querySelector("#pc-board");
-  //
-  // showShips(playerBoard, player.gameboard);
-  //
-  // enemyBoard.addEventListener("click", (e) =>
-  //   handleBoardClick({
-  //     e: e,
-  //     board: enemyBoard,
-  //     computer: computer,
-  //     player: player,
-  //     playerBoard: playerBoard,
-  //   }),
-  // );
-  //
-  // console.log(player.gameboard.board);
 };
 
 startGame();
