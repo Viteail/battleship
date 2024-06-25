@@ -9,6 +9,7 @@ import {
   appendStartEvent,
   appendRandomEvent,
 } from "./append";
+import { createBattleLayout } from "./UI/battleLayout";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -123,4 +124,8 @@ export const resetBoard = (shipPlacement) => {
   shipPlacement.gameboard.reset();
 };
 
-export const handleStartBattle = (shipPlacement) => {};
+export const handleStartBattle = (shipPlacement) => {
+  const content = document.querySelector("#content");
+
+  createBattleLayout(content);
+};

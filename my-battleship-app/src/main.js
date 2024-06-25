@@ -1,5 +1,5 @@
 import "./styles.css";
-import { createPageLayout } from "./modules/UI/layout";
+import { createPageLayout } from "./modules/UI/pageLayout";
 import { Player } from "./modules/player";
 import { handleBoardClick, handleNewGameClick } from "./modules/events";
 import { showShips } from "./modules/UI/box";
