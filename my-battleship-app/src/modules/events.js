@@ -4,8 +4,11 @@ import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
 import { displayShip, removeShip } from "./UI/shipDisplay";
-import { appendResetEvent } from "./reset";
-import { appendRandomEvent } from "./random";
+import {
+  appendResetEvent,
+  appendStartEvent,
+  appendRandomEvent,
+} from "./append";
 
 export const handleBoardClick = (args) => {
   const { e, board, computer, player, playerBoard } = args;
@@ -39,6 +42,7 @@ export const handleNewGameClick = (shipPlacement) => {
 
   appendResetEvent(shipPlacement);
   appendRandomEvent(shipPlacement);
+  appendStartEvent(shipPlacement);
 };
 
 export const allowDrop = (e) => {
@@ -118,3 +122,5 @@ export const resetBoard = (shipPlacement) => {
 
   shipPlacement.gameboard.reset();
 };
+
+export const handleStartBattle = (shipPlacement) => {};
