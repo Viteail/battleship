@@ -46,15 +46,18 @@ export const allowDrop = (e) => {
 };
 
 export const drag = (e) => {
-  e.dataTransfer.setData("text/plain", e.target.id);
+  e.dataTransfer.setData("id", e.target.id);
 };
 
 export const drop = (e, shipPlacement) => {
   e.preventDefault();
 
-  if (e.target.parentElement.children.length !== 100) return;
+  const data = e.dataTransfer.getData("id");
 
-  const data = e.dataTransfer.getData("text/plain");
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
+
+  if (data === "" || e.target.parentElement !== shipPlacementElm) return;
+
   const elm = document.querySelector(`#${data}`);
 
   const countElm = document.querySelector(`#${data}-count`);

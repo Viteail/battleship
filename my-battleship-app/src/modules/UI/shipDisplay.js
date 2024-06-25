@@ -21,7 +21,7 @@ export const displayShip = (boxElm, ship, count, shipPlacement) => {
     parts += `<div class='w-12 h-12 bg-slate-700 border-4 border-slate-500'></div>`;
 
   boxElm.innerHTML = `
-    <div id='l${ship.length}-${count}' class='flex absolute cursor-pointer' draggable=true>
+    <div id='l${ship.length}-${count}' class='draggable-ship flex absolute cursor-pointer' draggable=true>
       ${parts}
     </div>
 `;
