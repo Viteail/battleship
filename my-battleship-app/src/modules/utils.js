@@ -20,6 +20,12 @@ export const getShip = (coords, ships) => {
   }
 };
 
+export const getShipElm = (boardElm, ship) => {
+  const boxes = Array.from(boardElm.children);
+
+  return boxes[convertCoordsToIndex(ship.position[0])].firstElementChild;
+};
+
 export const isOutOfBoard = ({ col, row }) =>
   col < 0 || col > 9 || row < 0 || row > 9;
 

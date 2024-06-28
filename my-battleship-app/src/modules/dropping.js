@@ -1,6 +1,13 @@
 import { drop, allowDrop } from "./events";
-import { convertIndexToCoords, getShip, locateShipBox } from "./utils";
+import {
+  convertCoordsToIndex,
+  convertIndexToCoords,
+  getShip,
+  getShipElm,
+  locateShipBox,
+} from "./utils";
 import { displayShip, removeShip } from "./UI/shipDisplay";
+import { appendFlipEvent } from "./append";
 
 export const appendDropEvents = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
@@ -9,8 +16,10 @@ export const appendDropEvents = (shipPlacement) => {
   shipPlacementElm.addEventListener("dragover", (e) => allowDrop(e));
 };
 
-export const dropShip = (box, shipElm, shipPlacement, countElm) => {
-  const shipPlacementElm = box.parentElement;
+export const dropShip = (args) => {
+  const { boxElm, shipElm, childElm, shipPlacement, countElm } = args;
+
+  const shipPlacementElm = boxElm.parentElement;
   const boxes = Array.from(shipPlacementElm.children);
 
   const shipLength = shipElm.children.length;
@@ -20,7 +29,13 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
 
   if (!ship) return;
 
-  const coords = convertIndexToCoords(boxes.indexOf(box));
+  const coords = convertIndexToCoords(boxes.indexOf(boxElm));
+
+  const childIndex = Array.from(shipElm.children).indexOf(childElm);
+
+  coords.col -= childIndex;
+
+  const shipStartBox = boxes[convertCoordsToIndex(coords)];
 
   if (
     shipPlacement.gameboard.isValidPlace(ship, {
@@ -31,11 +46,19 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
     })
   ) {
     shipPlacement.gameboard.placeShip(ship, coords);
-    displayShip(box, ship, countElm.textContent[0], shipPlacement);
+    console.log(shipStartBox);
 
+    displayShip(shipStartBox, ship, countElm.textContent[0]);
+
+    // appendFlipEvent(
+    //   getShipElm(shipPlacementElm, ship),
+    //   ship,
+    //   shipPlacement,
+    //   countElm.textContent[0],
+    // );
+    //
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
-
   console.log(shipPlacement.gameboard.board);
 };
 
@@ -81,7 +104,13 @@ export const redropShip = (box, shipElm, shipPlacement) => {
 
     shipPlacement.gameboard.placeShip(ship, directionalCoords);
 
-    displayShip(box, ship, count, shipPlacement);
+    displayShip(box, ship, count);
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      count,
+    );
 
     console.log(shipPlacement.gameboard.board);
   } else
