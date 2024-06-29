@@ -47,9 +47,6 @@ export const appendComputerBoardEvent = (
 };
 
 export const appendFlipEvent = (shipElm, ship, shipPlacement, count) => {
-  shipElm.classList.add("draggable-ship");
-  appendDragEvent(shipElm);
-
   shipElm.addEventListener("click", (e) =>
     handleFlipDirection(e.target.parentElement, ship, shipPlacement, count),
   );

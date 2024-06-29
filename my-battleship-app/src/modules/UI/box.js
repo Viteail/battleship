@@ -2,7 +2,7 @@ export const generateBoxes = () => {
   let boxes = "";
 
   for (let i = 0; i < 100; i++) {
-    boxes += `<div class='relative border border-blue-200 border cursor-pointer hover:bg-sky-100'></div>`;
+    boxes += `<div class='border border-blue-200 border cursor-pointer hover:bg-sky-100'></div>`;
   }
 
   return boxes;

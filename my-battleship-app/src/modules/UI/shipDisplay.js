@@ -1,27 +1,32 @@
 import { convertCoordsToIndex } from "../utils";
 
-export const displayShip = (boxElm, ship, count) => {
+export const displayShip = (boxIndex, ship, count, boardElm) => {
+  const boxes = Array.from(boardElm.children);
+
   const vertical =
     ship.position.length > 1 && ship.position[0].row !== ship.position[1].row
       ? true
       : false;
 
-  console.log(ship, vertical);
-
   let parts = "";
 
-  for (let i = 0; i < ship.length; i++)
-    parts += `<div class='w-12 h-12 bg-slate-700 border-4 border-slate-500'></div>`;
+  for (let i = 0; i < ship.length; i++) {
+    parts += `
+      <div id='l${ship.length}-${count}-${i}' class='w-[2.47rem] h-[2.4rem]'></div>
+    `;
+  }
 
-  boxElm.innerHTML = `
-    <div id='l${ship.length}-${count}' class='flex absolute cursor-pointer' draggable=true>
+  boxes[boxIndex].innerHTML = `
+    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer shadow-[0_0px_0px_2px] shadow-blue-600 bg-blue-100 bg-opacity-50 z-10'>
       ${parts}
-    </div>
-`;
+    </div> 
+  `;
 
-  const shipElm = document.querySelector(`#l${ship.length}-${count}`);
-  if (vertical) shipElm.classList.add("flex-col");
-  else shipElm.classList.remove("flex-col");
+  const shipStartPart = document.querySelector(`#l${ship.length}-${count}`);
+
+  if (vertical) {
+    shipStartPart.classList.add("flex-col");
+  } else shipStartPart.classList.remove("flex-col");
 };
 
 export const displayShips = (player, boardElm) => {
@@ -49,7 +54,7 @@ export const generateParts = (length) => {
   let parts = "";
 
   for (let i = 0; i < length; i++) {
-    parts += `<div id='l${length}-child-${i}' class='w-11 h-11'></div>`;
+    parts += `<div id='l${length}-child-${i}' class='w-10 h-10'></div>`;
   }
 
   return parts;

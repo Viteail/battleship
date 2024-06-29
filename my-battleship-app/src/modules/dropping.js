@@ -8,6 +8,7 @@ import {
 } from "./utils";
 import { displayShip, removeShip } from "./UI/shipDisplay";
 import { appendFlipEvent } from "./append";
+import { appendDragEvent } from "./dragging";
 
 export const appendDropEvents = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
@@ -35,7 +36,7 @@ export const dropShip = (args) => {
 
   coords.col -= childIndex;
 
-  const shipStartBox = boxes[convertCoordsToIndex(coords)];
+  const shipStartBoxIndex = convertCoordsToIndex(coords);
 
   if (
     shipPlacement.gameboard.isValidPlace(ship, {
@@ -46,9 +47,15 @@ export const dropShip = (args) => {
     })
   ) {
     shipPlacement.gameboard.placeShip(ship, coords);
-    console.log(shipStartBox);
 
-    displayShip(shipStartBox, ship, countElm.textContent[0]);
+    displayShip(
+      shipStartBoxIndex,
+      ship,
+      countElm.textContent[0],
+      shipPlacementElm,
+    );
+
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
 
     // appendFlipEvent(
     //   getShipElm(shipPlacementElm, ship),
