@@ -5,7 +5,7 @@ import {
   getShipElm,
 } from "./utils";
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
-import { appendDragEvents } from "./dragging";
+import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
 import { displayShip, displayShips, removeShip } from "./UI/shipDisplay";
 import {
@@ -132,7 +132,9 @@ export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
   };
 
   const boxElm = shipElm.parentElement;
-  const shipPlacementElm = boxElm.parentElement;
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
+
+  const boxIndex = Array.from(shipPlacementElm.children).indexOf(boxElm);
 
   shipPlacement.gameboard.retrieveShip(coords, ship);
 
@@ -141,7 +143,9 @@ export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
 
     shipPlacement.gameboard.placeShip(ship, newCoords);
 
-    displayShip(boxElm, ship, count);
+    displayShip(boxIndex, ship, count, shipPlacementElm);
+
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
     appendFlipEvent(
       getShipElm(shipPlacementElm, ship),
       ship,

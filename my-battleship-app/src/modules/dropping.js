@@ -55,14 +55,13 @@ export const dropShip = (args) => {
     );
 
     appendDragEvent(getShipElm(shipPlacementElm, ship));
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      countElm.textContent[0],
+    );
 
-    // appendFlipEvent(
-    //   getShipElm(shipPlacementElm, ship),
-    //   ship,
-    //   shipPlacement,
-    //   countElm.textContent[0],
-    // );
-    //
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
   console.log(shipPlacement.gameboard.board);
@@ -80,11 +79,6 @@ export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
   const ship = getShip(initialCoords, shipPlacement.gameboard.ships);
 
   const coords = convertIndexToCoords(boxes.indexOf(boxElm));
-  const childIndex = Array.from(shipElm.children).indexOf(childElm);
-
-  coords.col -= childIndex;
-
-  const shipStartBoxIndex = convertCoordsToIndex(coords);
 
   const directionalCoords = {
     col: coords.col,
@@ -99,6 +93,16 @@ export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
         ? true
         : false,
   };
+
+  const childIndex = Array.from(shipElm.children).indexOf(childElm);
+
+  if (directionalCoords.vertical) directionalCoords.row -= childIndex;
+  else directionalCoords.col -= childIndex;
+
+  const shipStartBoxIndex = convertCoordsToIndex({
+    col: directionalCoords.col,
+    row: directionalCoords.row,
+  });
 
   shipPlacement.gameboard.retrieveShip(
     {
@@ -117,13 +121,14 @@ export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
     console.log(ship, directionalCoords);
 
     displayShip(shipStartBoxIndex, ship, count, shipPlacementElm);
+
     appendDragEvent(getShipElm(shipPlacementElm, ship));
-    // appendFlipEvent(
-    //   getShipElm(shipPlacementElm, ship),
-    //   ship,
-    //   shipPlacement,
-    //   count,
-    // );
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      count,
+    );
 
     console.log(shipPlacement.gameboard.board);
   } else {
