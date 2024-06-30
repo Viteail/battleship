@@ -1,5 +1,9 @@
 import { setBoxColor } from "./UI/box";
-import { convertIndexToCoords, getShipElm } from "./utils";
+import {
+  convertCoordsToIndex,
+  convertIndexToCoords,
+  getShipElm,
+} from "./utils";
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
@@ -72,20 +76,37 @@ export const drop = (e, shipPlacement) => {
   const shipElm = document.querySelector(`#${data}`);
   const childElm = document.querySelector(`#${child}`);
 
+  console.log(childElm, shipElm, e.target);
+
   if (!shipElm.classList.contains("draggable-ship")) return;
   const shipPlacementElm = document.querySelector("#ship-placement-board");
 
   let boxElm = e.target;
 
-  while (boxElm.parentElement !== shipPlacementElm) {
-    boxElm = boxElm.parentElement;
+  if (boxElm.parentElement !== shipPlacementElm) {
+    const rect = shipPlacementElm.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const boxes = Array.from(shipPlacementElm.children);
+    boxes.forEach((box) => {
+      const boxRect = box.getBoundingClientRect();
+      if (
+        x >= boxRect.left - rect.left &&
+        x <= boxRect.right - rect.left &&
+        y >= boxRect.top - rect.top &&
+        y <= boxRect.bottom - rect.top
+      ) {
+        boxElm = box;
+      }
+    });
   }
 
   const countElm = document.querySelector(`#${data}-count`);
 
   if (countElm)
     dropShip({ boxElm, shipElm, childElm, shipPlacement, countElm });
-  else redropShip(boxElm, shipElm, shipPlacement);
+  else redropShip(boxElm, shipElm, childElm, shipPlacement);
 };
 
 export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {

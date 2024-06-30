@@ -1,6 +1,7 @@
 import { drag } from "./events";
 
 export const appendDragEvent = (elm) => {
+  elm.draggable = "true";
   elm.classList.add("draggable-ship");
   elm.addEventListener("dragstart", (e) => drag(e));
 };

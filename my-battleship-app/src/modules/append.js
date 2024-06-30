@@ -6,8 +6,6 @@ import {
   handleFlipDirection,
 } from "./events";
 
-import { appendDragEvent } from "./dragging";
-
 export const appendRandomEvent = (shipPlacement) => {
   const randomBtn = document.querySelector("#random");
   const shipPlacementElm = document.querySelector("#ship-placement-board");

@@ -31,7 +31,6 @@ export const dropShip = (args) => {
   if (!ship) return;
 
   const coords = convertIndexToCoords(boxes.indexOf(boxElm));
-
   const childIndex = Array.from(shipElm.children).indexOf(childElm);
 
   coords.col -= childIndex;
@@ -69,8 +68,8 @@ export const dropShip = (args) => {
   console.log(shipPlacement.gameboard.board);
 };
 
-export const redropShip = (box, shipElm, shipPlacement) => {
-  const shipPlacementElm = box.parentElement;
+export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
   const boxes = Array.from(shipPlacementElm.children);
 
   const initialBox = locateShipBox(boxes, shipElm);
@@ -80,7 +79,12 @@ export const redropShip = (box, shipElm, shipPlacement) => {
 
   const ship = getShip(initialCoords, shipPlacement.gameboard.ships);
 
-  const coords = convertIndexToCoords(boxes.indexOf(box));
+  const coords = convertIndexToCoords(boxes.indexOf(boxElm));
+  const childIndex = Array.from(shipElm.children).indexOf(childElm);
+
+  coords.col -= childIndex;
+
+  const shipStartBoxIndex = convertCoordsToIndex(coords);
 
   const directionalCoords = {
     col: coords.col,
@@ -110,21 +114,24 @@ export const redropShip = (box, shipElm, shipPlacement) => {
     removeShip(initialBox, shipElm);
 
     shipPlacement.gameboard.placeShip(ship, directionalCoords);
+    console.log(ship, directionalCoords);
 
-    displayShip(box, ship, count);
-    appendFlipEvent(
-      getShipElm(shipPlacementElm, ship),
-      ship,
-      shipPlacement,
-      count,
-    );
+    displayShip(shipStartBoxIndex, ship, count, shipPlacementElm);
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
+    // appendFlipEvent(
+    //   getShipElm(shipPlacementElm, ship),
+    //   ship,
+    //   shipPlacement,
+    //   count,
+    // );
 
     console.log(shipPlacement.gameboard.board);
-  } else
+  } else {
     shipPlacement.gameboard.placeShip(ship, {
       col: initialCoords.col,
       row: initialCoords.row,
       vertical: directionalCoords.vertical,
       orizontal: directionalCoords.orizontal,
     });
+  }
 };
