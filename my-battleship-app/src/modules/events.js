@@ -1,9 +1,5 @@
 import { setBoxColor } from "./UI/box";
-import {
-  convertCoordsToIndex,
-  convertIndexToCoords,
-  getShipElm,
-} from "./utils";
+import { convertIndexToCoords, getShipElm } from "./utils";
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
@@ -192,6 +188,7 @@ export const handleRandomPlacement = (shipPlacement, shipPlacementElm) => {
     const countElm = document.querySelector(`#l${count}-count`);
     countElm.textContent = "0x";
 
+    appendDragEvent(shipElm);
     appendFlipEvent(shipElm, ships[i], shipPlacement, count);
   }
 };

@@ -17,7 +17,7 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
   }
 
   boxes[boxIndex].innerHTML = `
-    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer shadow-[0_0px_0px_2px] shadow-blue-600 bg-blue-100 bg-opacity-50 z-10'>
+    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer outline outline-2 outline-blue-600 bg-blue-100 bg-opacity-50 z-10'>
       ${parts}
     </div> 
   `;
@@ -34,7 +34,7 @@ export const displayShips = (player, boardElm) => {
   const ships = player.gameboard.ships;
 
   for (let i = 0; i < ships.length; i++) {
-    const boxElm = boxes[convertCoordsToIndex(ships[i].position[0])];
+    const boxIndex = convertCoordsToIndex(ships[i].position[0]);
 
     const sameLengthShips = ships.filter(
       (ship) => ship.length === ships[i].length,
@@ -42,7 +42,7 @@ export const displayShips = (player, boardElm) => {
 
     const count = sameLengthShips.length - sameLengthShips.indexOf(ships[i]);
 
-    displayShip(boxElm, ships[i], count);
+    displayShip(boxIndex, ships[i], count, boardElm);
   }
 };
 
