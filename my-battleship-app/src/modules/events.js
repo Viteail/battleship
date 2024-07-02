@@ -1,14 +1,15 @@
 import { setBoxColor } from "./UI/box";
-import { convertIndexToCoords } from "./utils";
+import { convertIndexToCoords, getShipElm } from "./utils";
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
-import { appendDragEvents } from "./dragging";
+import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
-import { displayShip, removeShip } from "./UI/shipDisplay";
+import { displayShip, displayShips, removeShip } from "./UI/shipDisplay";
 import {
   appendResetEvent,
   appendStartEvent,
   appendRandomEvent,
   appendComputerBoardEvent,
+  appendFlipEvent,
 } from "./append";
 import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
@@ -53,24 +54,55 @@ export const allowDrop = (e) => {
 };
 
 export const drag = (e) => {
+  const { clientX, clientY } = e;
+  const elementAtPoint = document.elementFromPoint(clientX, clientY);
+
   e.dataTransfer.setData("id", e.target.id);
+  e.dataTransfer.setData("child", elementAtPoint.id);
 };
 
 export const drop = (e, shipPlacement) => {
   e.preventDefault();
 
   const data = e.dataTransfer.getData("id");
+  const child = e.dataTransfer.getData("child");
 
+  if (data === "") return;
+
+  const shipElm = document.querySelector(`#${data}`);
+  const childElm = document.querySelector(`#${child}`);
+
+  console.log(childElm, shipElm, e.target);
+
+  if (!shipElm.classList.contains("draggable-ship")) return;
   const shipPlacementElm = document.querySelector("#ship-placement-board");
 
-  if (data === "" || e.target.parentElement !== shipPlacementElm) return;
+  let boxElm = e.target;
 
-  const elm = document.querySelector(`#${data}`);
+  if (boxElm.parentElement !== shipPlacementElm) {
+    const rect = shipPlacementElm.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const boxes = Array.from(shipPlacementElm.children);
+    boxes.forEach((box) => {
+      const boxRect = box.getBoundingClientRect();
+      if (
+        x >= boxRect.left - rect.left &&
+        x <= boxRect.right - rect.left &&
+        y >= boxRect.top - rect.top &&
+        y <= boxRect.bottom - rect.top
+      ) {
+        boxElm = box;
+      }
+    });
+  }
 
   const countElm = document.querySelector(`#${data}-count`);
 
-  if (countElm) dropShip(e.target, elm, shipPlacement, countElm);
-  else redropShip(e.target, elm, shipPlacement);
+  if (countElm)
+    dropShip({ boxElm, shipElm, childElm, shipPlacement, countElm });
+  else redropShip(boxElm, shipElm, childElm, shipPlacement);
 };
 
 export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
@@ -96,6 +128,9 @@ export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
   };
 
   const boxElm = shipElm.parentElement;
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
+
+  const boxIndex = Array.from(shipPlacementElm.children).indexOf(boxElm);
 
   shipPlacement.gameboard.retrieveShip(coords, ship);
 
@@ -104,11 +139,19 @@ export const handleFlipDirection = (shipElm, ship, shipPlacement, count) => {
 
     shipPlacement.gameboard.placeShip(ship, newCoords);
 
-    displayShip(boxElm, ship, count, shipPlacement);
+    displayShip(boxIndex, ship, count, shipPlacementElm);
+
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      count,
+    );
   } else shipPlacement.gameboard.placeShip(ship, coords);
 };
 
-export const resetBoard = (shipPlacement) => {
+export const handleResetBoard = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
   const boxes = Array.from(shipPlacementElm.children);
 
@@ -124,6 +167,30 @@ export const resetBoard = (shipPlacement) => {
   }
 
   shipPlacement.gameboard.reset();
+};
+
+export const handleRandomPlacement = (shipPlacement, shipPlacementElm) => {
+  handleResetBoard(shipPlacement);
+
+  shipPlacement.gameboard.randomShipPlacement();
+  displayShips(shipPlacement, shipPlacementElm);
+
+  const ships = shipPlacement.gameboard.ships;
+
+  for (let i = 0; i < ships.length; i++) {
+    const shipElm = getShipElm(
+      shipPlacementElm,
+      shipPlacement.gameboard.ships[i],
+    );
+
+    const count = shipElm.id[shipElm.id.length - 1];
+
+    const countElm = document.querySelector(`#l${count}-count`);
+    countElm.textContent = "0x";
+
+    appendDragEvent(shipElm);
+    appendFlipEvent(shipElm, ships[i], shipPlacement, count);
+  }
 };
 
 export const handleStartBattle = (shipPlacement) => {
@@ -143,6 +210,8 @@ export const handleStartBattle = (shipPlacement) => {
 
   const playerBoard = document.querySelector("#player-board");
   const computerBoard = document.querySelector("#pc-board");
+
+  displayShips(player, playerBoard);
 
   appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
 };

@@ -1,6 +1,14 @@
 import { drop, allowDrop } from "./events";
-import { convertIndexToCoords, getShip, locateShipBox } from "./utils";
+import {
+  convertCoordsToIndex,
+  convertIndexToCoords,
+  getShip,
+  getShipElm,
+  locateShipBox,
+} from "./utils";
 import { displayShip, removeShip } from "./UI/shipDisplay";
+import { appendFlipEvent } from "./append";
+import { appendDragEvent } from "./dragging";
 
 export const appendDropEvents = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
@@ -9,8 +17,10 @@ export const appendDropEvents = (shipPlacement) => {
   shipPlacementElm.addEventListener("dragover", (e) => allowDrop(e));
 };
 
-export const dropShip = (box, shipElm, shipPlacement, countElm) => {
-  const shipPlacementElm = box.parentElement;
+export const dropShip = (args) => {
+  const { boxElm, shipElm, childElm, shipPlacement, countElm } = args;
+
+  const shipPlacementElm = boxElm.parentElement;
   const boxes = Array.from(shipPlacementElm.children);
 
   const shipLength = shipElm.children.length;
@@ -20,7 +30,12 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
 
   if (!ship) return;
 
-  const coords = convertIndexToCoords(boxes.indexOf(box));
+  const coords = convertIndexToCoords(boxes.indexOf(boxElm));
+  const childIndex = Array.from(shipElm.children).indexOf(childElm);
+
+  coords.col -= childIndex;
+
+  const shipStartBoxIndex = convertCoordsToIndex(coords);
 
   if (
     shipPlacement.gameboard.isValidPlace(ship, {
@@ -31,16 +46,29 @@ export const dropShip = (box, shipElm, shipPlacement, countElm) => {
     })
   ) {
     shipPlacement.gameboard.placeShip(ship, coords);
-    displayShip(box, ship, countElm.textContent[0], shipPlacement);
+
+    displayShip(
+      shipStartBoxIndex,
+      ship,
+      countElm.textContent[0],
+      shipPlacementElm,
+    );
+
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      countElm.textContent[0],
+    );
 
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
-
   console.log(shipPlacement.gameboard.board);
 };
 
-export const redropShip = (box, shipElm, shipPlacement) => {
-  const shipPlacementElm = box.parentElement;
+export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
+  const shipPlacementElm = document.querySelector("#ship-placement-board");
   const boxes = Array.from(shipPlacementElm.children);
 
   const initialBox = locateShipBox(boxes, shipElm);
@@ -50,7 +78,7 @@ export const redropShip = (box, shipElm, shipPlacement) => {
 
   const ship = getShip(initialCoords, shipPlacement.gameboard.ships);
 
-  const coords = convertIndexToCoords(boxes.indexOf(box));
+  const coords = convertIndexToCoords(boxes.indexOf(boxElm));
 
   const directionalCoords = {
     col: coords.col,
@@ -66,6 +94,16 @@ export const redropShip = (box, shipElm, shipPlacement) => {
         : false,
   };
 
+  const childIndex = Array.from(shipElm.children).indexOf(childElm);
+
+  if (directionalCoords.vertical) directionalCoords.row -= childIndex;
+  else directionalCoords.col -= childIndex;
+
+  const shipStartBoxIndex = convertCoordsToIndex({
+    col: directionalCoords.col,
+    row: directionalCoords.row,
+  });
+
   shipPlacement.gameboard.retrieveShip(
     {
       col: initialCoords.col,
@@ -80,15 +118,25 @@ export const redropShip = (box, shipElm, shipPlacement) => {
     removeShip(initialBox, shipElm);
 
     shipPlacement.gameboard.placeShip(ship, directionalCoords);
+    console.log(ship, directionalCoords);
 
-    displayShip(box, ship, count, shipPlacement);
+    displayShip(shipStartBoxIndex, ship, count, shipPlacementElm);
+
+    appendDragEvent(getShipElm(shipPlacementElm, ship));
+    appendFlipEvent(
+      getShipElm(shipPlacementElm, ship),
+      ship,
+      shipPlacement,
+      count,
+    );
 
     console.log(shipPlacement.gameboard.board);
-  } else
+  } else {
     shipPlacement.gameboard.placeShip(ship, {
       col: initialCoords.col,
       row: initialCoords.row,
       vertical: directionalCoords.vertical,
       orizontal: directionalCoords.orizontal,
     });
+  }
 };
