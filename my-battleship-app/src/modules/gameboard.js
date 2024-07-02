@@ -1,5 +1,10 @@
 import { Ship } from "./ship";
-import { getShip, isOutOfBoard, getRandomNumber } from "./utils";
+import {
+  getShip,
+  isOutOfBoard,
+  getRandomNumber,
+  getAroundCoords,
+} from "./utils";
 // . = water
 // x = hit
 // o = miss
@@ -47,57 +52,17 @@ export class Gameboard {
   }
 
   isValidPlace(ship, coords) {
-    const nearCoords = [];
-
     for (let i = 0; i < ship.length; i++) {
       let currentCol = coords.vertical ? coords.col : coords.col + i;
       let currentRow = coords.vertical ? coords.row + i : coords.row;
 
       if (isOutOfBoard({ col: currentCol, row: currentRow })) return false;
       if (this.board[currentRow][currentCol] !== ".") return false;
-
-      if (coords.vertical) {
-        if (i === 0)
-          nearCoords.push(
-            { col: currentCol - 1, row: currentRow - 1 },
-            { col: currentCol, row: currentRow - 1 },
-            { col: currentCol + 1, row: currentRow - 1 },
-          );
-
-        nearCoords.push(
-          { col: currentCol - 1, row: currentRow },
-          { col: currentCol + 1, row: currentRow },
-        );
-
-        if (i === ship.length - 1)
-          nearCoords.push(
-            { col: currentCol - 1, row: currentRow + 1 },
-            { col: currentCol, row: currentRow + 1 },
-            { col: currentCol + 1, row: currentRow + 1 },
-          );
-      } else {
-        if (i === 0)
-          nearCoords.push(
-            { col: currentCol - 1, row: currentRow - 1 },
-            { col: currentCol - 1, row: currentRow },
-            { col: currentCol - 1, row: currentRow + 1 },
-          );
-
-        nearCoords.push(
-          { col: currentCol, row: currentRow - 1 },
-          { col: currentCol, row: currentRow + 1 },
-        );
-
-        if (i === ship.length - 1)
-          nearCoords.push(
-            { col: currentCol + 1, row: currentRow - 1 },
-            { col: currentCol + 1, row: currentRow },
-            { col: currentCol + 1, row: currentRow + 1 },
-          );
-      }
     }
 
-    return nearCoords.every(
+    const aroundCoords = getAroundCoords(coords, ship);
+
+    return aroundCoords.every(
       ({ col, row }) =>
         isOutOfBoard({ col, row }) || this.board[row][col] !== "s",
     );
@@ -110,6 +75,26 @@ export class Gameboard {
       this.board[coords.row][coords.col] = "x";
       ship.hit();
 
+      if (ship.isSunk()) {
+        const vertical =
+          ship.length > 1 && ship.position[0].row !== ship.position[1].row
+            ? true
+            : false;
+
+        const aroundCoords = getAroundCoords(
+          {
+            col: ship.position[0].col,
+            row: ship.position[0].row,
+            vertical: vertical,
+          },
+          ship,
+        );
+
+        for (let i = 0; i < aroundCoords.length; i++)
+          if (!isOutOfBoard(aroundCoords[i])) {
+            this.board[aroundCoords[i].row][aroundCoords[i].col] = "o";
+          }
+      }
       return;
     }
 
