@@ -1,5 +1,10 @@
-import { setBoxColor } from "./UI/box";
-import { convertIndexToCoords, getShipElm } from "./utils";
+import { setBoxColor, updateMultipleBoxes } from "./UI/box";
+import {
+  convertIndexToCoords,
+  getAroundCoords,
+  getShip,
+  getShipElm,
+} from "./utils";
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
@@ -15,10 +20,10 @@ import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
 
 export const handleBoardClick = (args) => {
-  const { e, board, computer, player, playerBoard } = args;
-  if (e.target === board) return;
+  const { e, computerBoard, computer, player, playerBoard } = args;
+  if (e.target === computerBoard) return;
 
-  const boxes = Array.from(board.children);
+  const boxes = Array.from(computerBoard.children);
   const boxIndex = boxes.indexOf(e.target);
 
   const coords = convertIndexToCoords(boxIndex);
@@ -31,7 +36,29 @@ export const handleBoardClick = (args) => {
       computer.gameboard.board[coords.row][coords.col],
     );
 
-    if (computer.gameboard.board[coords.row][coords.col] === "x") return;
+    if (computer.gameboard.board[coords.row][coords.col] === "x") {
+      const ship = getShip(coords, computer.gameboard.ships);
+
+      if (ship.isSunk())
+        updateMultipleBoxes(
+          getAroundCoords(
+            {
+              col: ship.position[0].col,
+              row: ship.position[0].row,
+              vertical:
+                ship.position.length > 1 &&
+                ship.position[0].row !== ship.position[1].row
+                  ? true
+                  : false,
+            },
+            ship,
+          ),
+          boxes,
+          computer.gameboard.board,
+        );
+
+      return;
+    }
 
     computer.attackRandomSpot(player.gameboard, playerBoard);
   }

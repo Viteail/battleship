@@ -36,7 +36,7 @@ export const appendComputerBoardEvent = (
   computerBoard.addEventListener("click", (e) => {
     handleBoardClick({
       e: e,
-      board: computerBoard,
+      computerBoard: computerBoard,
       computer: computer,
       player: player,
       playerBoard: playerBoard,

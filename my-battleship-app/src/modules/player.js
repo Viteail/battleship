@@ -1,4 +1,4 @@
-import { setBoxColor } from "./UI/box";
+import { setBoxColor, updateMultipleBoxes } from "./UI/box";
 import { Gameboard } from "./gameboard";
 
 import {
@@ -6,6 +6,7 @@ import {
   convertIndexToCoords,
   getShip,
   isOutOfBoard,
+  getAroundCoords,
 } from "./utils";
 
 export class Player {
@@ -18,6 +19,8 @@ export class Player {
   attackRandomSpot(enemyBoard, boardElement) {
     if (this.firstHit) return this.attackNearSpot(enemyBoard, boardElement);
     const randomNumber = getRandomNumber(100);
+
+    const boxes = Array.from(boardElement.children);
     const box = Array.from(boardElement.children)[randomNumber];
 
     const coords = convertIndexToCoords(randomNumber);
@@ -33,9 +36,26 @@ export class Player {
     if (enemyBoard.board[coords.row][coords.col] === "x") {
       const ship = getShip(coords, enemyBoard.ships);
 
-      this.firstHit = ship.isSunk()
-        ? false
-        : { col: coords.col, row: coords.row };
+      if (ship.isSunk()) {
+        updateMultipleBoxes(
+          getAroundCoords(
+            {
+              col: ship.position[0].col,
+              row: ship.position[0].row,
+              vertical:
+                ship.length > 1 && ship.position[0].row !== ship.position[1].row
+                  ? true
+                  : false,
+            },
+            ship,
+          ),
+          boxes,
+          enemyBoard.board,
+        );
+
+        this.firstHit = false;
+      } else this.firstHit = { col: coords.col, row: coords.row };
+
       return this.attackRandomSpot(enemyBoard, boardElement);
     }
   }
@@ -67,8 +87,10 @@ export class Player {
 
     enemyBoard.receiveAttack(nearCoords[randomNumber]);
 
+    const boxes = Array.from(boardElement.children);
+
     setBoxColor(
-      Array.from(boardElement.children)[
+      boxes[
         Number("" + nearCoords[randomNumber].row + nearCoords[randomNumber].col)
       ],
       enemyBoard.board[nearCoords[randomNumber].row][
@@ -82,8 +104,25 @@ export class Player {
       ] === "x"
     ) {
       const ship = getShip(nearCoords[randomNumber], enemyBoard.ships);
-      if (ship.isSunk()) this.firstHit = false;
-      else
+      if (ship.isSunk()) {
+        updateMultipleBoxes(
+          getAroundCoords(
+            {
+              col: ship.position[0].col,
+              row: ship.position[0].row,
+              vertical:
+                ship.length > 1 && ship.position[0].row !== ship.position[1].row
+                  ? true
+                  : false,
+            },
+            ship,
+          ),
+          boxes,
+          enemyBoard.board,
+        );
+
+        this.firstHit = false;
+      } else
         this.lastHit = {
           col: nearCoords[randomNumber].col,
           row: nearCoords[randomNumber].row,
@@ -138,10 +177,10 @@ export class Player {
 
     enemyBoard.receiveAttack(coords[randomNumber]);
 
+    const boxes = Array.from(boardElement.children);
+
     setBoxColor(
-      Array.from(boardElement.children)[
-        Number("" + coords[randomNumber].row + coords[randomNumber].col)
-      ],
+      boxes[Number("" + coords[randomNumber].row + coords[randomNumber].col)],
       enemyBoard.board[coords[randomNumber].row][coords[randomNumber].col],
     );
 
@@ -152,6 +191,22 @@ export class Player {
       let ship = getShip(coords[randomNumber], enemyBoard.ships);
 
       if (ship.isSunk()) {
+        updateMultipleBoxes(
+          getAroundCoords(
+            {
+              col: ship.position[0].col,
+              row: ship.position[0].row,
+              vertical:
+                ship.length > 1 && ship.position[0].row !== ship.position[1].row
+                  ? true
+                  : false,
+            },
+            ship,
+          ),
+          boxes,
+          enemyBoard.board,
+        );
+
         this.lastHit = false;
         this.firstHit = false;
       } else

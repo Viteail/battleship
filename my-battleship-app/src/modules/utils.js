@@ -35,11 +35,6 @@ export const locateShipBox = (boxes, shipElm) => {
 };
 
 export const getAroundCoords = (coords, ship) => {
-  // const vertical =
-  //   ship.length > 1 && ship.position[0].row !== ship.position[1].row
-  //     ? true
-  //     : false;
-
   const nearCoords = [];
 
   for (let i = 0; i < ship.length; i++) {

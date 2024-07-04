@@ -1,3 +1,5 @@
+import { convertCoordsToIndex, isOutOfBoard } from "../utils";
+
 export const generateBoxes = () => {
   let boxes = "";
 
@@ -8,11 +10,19 @@ export const generateBoxes = () => {
   return boxes;
 };
 
-export const setBoxColor = (box, board) => {
-  box.classList.remove("bg-slate-700");
-  board === "x"
-    ? box.classList.add("bg-red-500")
-    : box.classList.add("bg-sky-300");
+export const setBoxColor = (boxElm, box) => {
+  boxElm.classList.remove("bg-slate-700");
+  boxElm.classList.add(box === "x" ? "bg-red-500" : "bg-sky-300");
 
-  box.classList.remove("hover:bg-sky-100");
+  boxElm.classList.remove("hover:bg-sky-100");
+};
+
+export const updateMultipleBoxes = (coords, boxes, board) => {
+  for (let i = 0; i < coords.length; i++) {
+    if (!isOutOfBoard(coords[i]))
+      setBoxColor(
+        boxes[convertCoordsToIndex(coords[i])],
+        board[coords[i].row][coords[i].col],
+      );
+  }
 };
