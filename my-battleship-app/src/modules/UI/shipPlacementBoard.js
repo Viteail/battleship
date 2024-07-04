@@ -6,7 +6,7 @@ export const createShipPlacementBoard = (content) => {
     <div class='flex gap-20'>
       <div class='flex flex-col gap-10'>
         <div>
-          <div id='ship-placement-board' class='grid grid-cols-10 w-[25rem] h-[25rem] shadow-[0_0px_0px_1px] shadow-blue-200'>${generateBoxes()}</div>
+          <div id='ship-placement-board' class='grid grid-cols-10 w-[25rem] h-[25rem] outline outline-1 outline-blue-200'>${generateBoxes()}</div>
         </div>
         <div class='flex gap-20'>
           <div class='flex justify-center w-full'><button id='random' class='text-2xl select-none'>Random</button></div>
