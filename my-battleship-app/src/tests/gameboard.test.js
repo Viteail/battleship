@@ -491,4 +491,19 @@ describe("ship in gameboard", () => {
       ).toBe(true);
     });
   });
+
+  describe("winner", () => {
+    test("is Player", () => {
+      const gameboard = new Gameboard();
+      const ships = gameboard.ships;
+
+      for (let i = 0; i < ships.length; i++) {
+        while (!ships[i].isSunk()) {
+          ships[i].hit();
+        }
+      }
+
+      expect(gameboard.areAllShipsSunk()).toBe(true);
+    });
+  });
 });

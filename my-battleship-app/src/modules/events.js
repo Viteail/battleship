@@ -5,10 +5,12 @@ import {
   getShip,
   getShipElm,
 } from "./utils";
+
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
 import { displayShip, displayShips, removeShip } from "./UI/shipDisplay";
+
 import {
   appendResetEvent,
   appendStartEvent,
@@ -16,12 +18,14 @@ import {
   appendComputerBoardEvent,
   appendFlipEvent,
 } from "./append";
+
 import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
+import { updateCurrentPlayerTurn } from "./UI/playerTurn";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
-  if (e.target === computerBoard) return;
+  if (e.target === computerBoard || !player.turn) return;
 
   const boxes = Array.from(computerBoard.children);
   const boxIndex = boxes.indexOf(e.target);
@@ -60,7 +64,15 @@ export const handleBoardClick = (args) => {
       return;
     }
 
-    computer.attackRandomSpot(player.gameboard, playerBoard);
+    updateCurrentPlayerTurn(computer.name);
+    player.turn = false;
+
+    setTimeout(() => {
+      computer.attackRandomSpot(player.gameboard, playerBoard);
+
+      updateCurrentPlayerTurn(player.name);
+      player.turn = true;
+    }, 400);
   }
 };
 
@@ -98,8 +110,6 @@ export const drop = (e, shipPlacement) => {
 
   const shipElm = document.querySelector(`#${data}`);
   const childElm = document.querySelector(`#${child}`);
-
-  console.log(childElm, shipElm, e.target);
 
   if (!shipElm.classList.contains("draggable-ship")) return;
   const shipPlacementElm = document.querySelector("#ship-placement-board");
@@ -228,7 +238,10 @@ export const handleStartBattle = (shipPlacement) => {
   createBattleLayout(content);
 
   const player = new Player();
+  player.name = "Player";
+
   const computer = new Player();
+  computer.name = "Computer";
 
   player.gameboard.board = [...shipPlacement.gameboard.board];
   player.gameboard.ships = [...shipPlacement.gameboard.ships];

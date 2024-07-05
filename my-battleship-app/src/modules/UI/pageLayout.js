@@ -6,7 +6,7 @@ const createHeader = () =>
    </div>`;
 
 const createContent = () =>
-  ` <div id='content' class='flex items-center justify-around flex-1'>
+  ` <div id='content' class='flex items-center justify-center gap-[100px] flex-1'>
        <!-- content  -->
     </div>`;
 

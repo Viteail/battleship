@@ -1,4 +1,5 @@
 import { generateBoxes } from "./box";
+import { createCurrentPlayerTurn } from "./playerTurn";
 
 export const createBattleLayout = (content) => {
   content.innerHTML = `
@@ -7,7 +8,7 @@ export const createBattleLayout = (content) => {
     <div id='player-board' class='grid grid-cols-10 w-[25rem] h-[25rem] outline outline-1 outline-blue-200'>${generateBoxes()}</div>
     <div class='text-center'>Ships alive</div>
   </div>
-  <div class='text-center p-10 text-3xl'>Player's Move!</div>
+  ${createCurrentPlayerTurn()}
   <div>
      <div class='text-center'>Computer's gameboard</div>
      <div id='pc-board' class='grid grid-cols-10 w-[25rem] h-[25rem] outline outline-1 outline-blue-200'>${generateBoxes()}</div>

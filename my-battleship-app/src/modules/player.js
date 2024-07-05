@@ -11,7 +11,9 @@ import {
 
 export class Player {
   constructor() {
+    this.turn = true;
     this.gameboard = new Gameboard();
+    this.name;
     this.firstHit = false;
     this.lastHit = false;
   }
@@ -56,7 +58,9 @@ export class Player {
         this.firstHit = false;
       } else this.firstHit = { col: coords.col, row: coords.row };
 
-      return this.attackRandomSpot(enemyBoard, boardElement);
+      setTimeout(() => {
+        this.attackRandomSpot(enemyBoard, boardElement);
+      }, 400);
     }
   }
 
@@ -127,7 +131,9 @@ export class Player {
           col: nearCoords[randomNumber].col,
           row: nearCoords[randomNumber].row,
         };
-      this.attackRandomSpot(enemyBoard, boardElement);
+      setTimeout(() => {
+        this.attackRandomSpot(enemyBoard, boardElement);
+      }, 400);
     }
   }
 
@@ -215,7 +221,9 @@ export class Player {
           row: coords[randomNumber].row,
         };
 
-      this.attackRandomSpot(enemyBoard, boardElement);
+      setTimeout(() => {
+        this.attackRandomSpot(enemyBoard, boardElement);
+      }, 400);
     }
   }
 }
