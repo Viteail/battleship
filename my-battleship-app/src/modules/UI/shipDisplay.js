@@ -30,7 +30,6 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
 };
 
 export const displayShips = (player, boardElm) => {
-  const boxes = Array.from(boardElm.children);
   const ships = player.gameboard.ships;
 
   for (let i = 0; i < ships.length; i++) {

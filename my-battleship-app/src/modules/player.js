@@ -1,4 +1,6 @@
 import { setBoxColor, updateMultipleBoxes } from "./UI/box";
+import { updateCurrentPlayerTurn } from "./UI/playerTurn";
+import { createWinnerLayout } from "./UI/winnerLayout";
 import { Gameboard } from "./gameboard";
 
 import {
@@ -18,8 +20,9 @@ export class Player {
     this.lastHit = false;
   }
 
-  attackRandomSpot(enemyBoard, boardElement) {
-    if (this.firstHit) return this.attackNearSpot(enemyBoard, boardElement);
+  attackRandomSpot(enemy, boardElement) {
+    if (this.firstHit) return this.attackNearSpot(enemy, boardElement);
+    const enemyBoard = enemy.gameboard;
     const randomNumber = getRandomNumber(100);
 
     const boxes = Array.from(boardElement.children);
@@ -28,44 +31,25 @@ export class Player {
     const coords = convertIndexToCoords(randomNumber);
 
     if (enemyBoard.hasBeenShot(coords)) {
-      return this.attackRandomSpot(enemyBoard, boardElement);
+      return this.attackRandomSpot(enemy, boardElement);
     }
 
     enemyBoard.receiveAttack(coords);
 
     setBoxColor(box, enemyBoard.board[coords.row][coords.col]);
 
-    if (enemyBoard.board[coords.row][coords.col] === "x") {
-      const ship = getShip(coords, enemyBoard.ships);
-
-      if (ship.isSunk()) {
-        updateMultipleBoxes(
-          getAroundCoords(
-            {
-              col: ship.position[0].col,
-              row: ship.position[0].row,
-              vertical:
-                ship.length > 1 && ship.position[0].row !== ship.position[1].row
-                  ? true
-                  : false,
-            },
-            ship,
-          ),
-          boxes,
-          enemyBoard.board,
-        );
-
-        this.firstHit = false;
-      } else this.firstHit = { col: coords.col, row: coords.row };
-
-      setTimeout(() => {
-        this.attackRandomSpot(enemyBoard, boardElement);
-      }, 400);
+    if (enemyBoard.board[coords.row][coords.col] === "x")
+      this.processHit(coords, enemy, boxes, boardElement);
+    else {
+      this.turn = false;
+      updateCurrentPlayerTurn(enemy.name);
     }
   }
 
-  attackNearSpot(enemyBoard, boardElement) {
-    if (this.lastHit) return this.attackRow(enemyBoard, boardElement);
+  attackNearSpot(enemy, boardElement) {
+    if (this.lastHit) return this.attackRow(enemy, boardElement);
+    const enemyBoard = enemy.gameboard;
+
     const coords = { col: this.firstHit.col, row: this.firstHit.row };
 
     let nearCoords = [
@@ -106,39 +90,17 @@ export class Player {
       enemyBoard.board[nearCoords[randomNumber].row][
         nearCoords[randomNumber].col
       ] === "x"
-    ) {
-      const ship = getShip(nearCoords[randomNumber], enemyBoard.ships);
-      if (ship.isSunk()) {
-        updateMultipleBoxes(
-          getAroundCoords(
-            {
-              col: ship.position[0].col,
-              row: ship.position[0].row,
-              vertical:
-                ship.length > 1 && ship.position[0].row !== ship.position[1].row
-                  ? true
-                  : false,
-            },
-            ship,
-          ),
-          boxes,
-          enemyBoard.board,
-        );
-
-        this.firstHit = false;
-      } else
-        this.lastHit = {
-          col: nearCoords[randomNumber].col,
-          row: nearCoords[randomNumber].row,
-        };
-      setTimeout(() => {
-        this.attackRandomSpot(enemyBoard, boardElement);
-      }, 400);
+    )
+      this.processHit(nearCoords[randomNumber], enemy, boxes, boardElement);
+    else {
+      this.turn = false;
+      updateCurrentPlayerTurn(enemy.name);
     }
   }
 
-  attackRow(enemyBoard, boardElement) {
-    console.log("er");
+  attackRow(enemy, boardElement) {
+    const enemyBoard = enemy.gameboard;
+
     let coords = [
       {
         col:
@@ -193,37 +155,50 @@ export class Player {
     if (
       enemyBoard.board[coords[randomNumber].row][coords[randomNumber].col] ===
       "x"
-    ) {
-      let ship = getShip(coords[randomNumber], enemyBoard.ships);
-
-      if (ship.isSunk()) {
-        updateMultipleBoxes(
-          getAroundCoords(
-            {
-              col: ship.position[0].col,
-              row: ship.position[0].row,
-              vertical:
-                ship.length > 1 && ship.position[0].row !== ship.position[1].row
-                  ? true
-                  : false,
-            },
-            ship,
-          ),
-          boxes,
-          enemyBoard.board,
-        );
-
-        this.lastHit = false;
-        this.firstHit = false;
-      } else
-        this.lastHit = {
-          col: coords[randomNumber].col,
-          row: coords[randomNumber].row,
-        };
-
-      setTimeout(() => {
-        this.attackRandomSpot(enemyBoard, boardElement);
-      }, 400);
+    )
+      this.processHit(coords[randomNumber], enemy, boxes, boardElement);
+    else {
+      this.turn = false;
+      updateCurrentPlayerTurn(enemy.name);
     }
+  }
+
+  processHit(coords, enemy, boxes, boardElement) {
+    const enemyBoard = enemy.gameboard;
+    const ship = getShip(coords, enemyBoard.ships);
+
+    if (ship.isSunk()) {
+      updateMultipleBoxes(
+        getAroundCoords(
+          {
+            col: ship.position[0].col,
+            row: ship.position[0].row,
+            vertical:
+              ship.length > 1 && ship.position[0].row !== ship.position[1].row
+                ? true
+                : false,
+          },
+          ship,
+        ),
+        boxes,
+        enemyBoard.board,
+      );
+
+      if (enemyBoard.areAllShipsSunk()) {
+        createWinnerLayout(this.name);
+
+        return;
+      }
+
+      this.firstHit = false;
+      this.lastHit = false;
+    } else {
+      if (this.firstHit) this.lastHit = { ...coords };
+      else this.firstHit = { ...coords };
+    }
+
+    setTimeout(() => {
+      this.attackRandomSpot(enemy, boardElement);
+    }, 400);
   }
 }

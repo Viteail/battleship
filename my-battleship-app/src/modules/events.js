@@ -22,10 +22,11 @@ import {
 import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
+import { createWinnerLayout } from "./UI/winnerLayout";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
-  if (e.target === computerBoard || !player.turn) return;
+  if (e.target === computerBoard || computer.turn) return;
 
   const boxes = Array.from(computerBoard.children);
   const boxIndex = boxes.indexOf(e.target);
@@ -43,7 +44,7 @@ export const handleBoardClick = (args) => {
     if (computer.gameboard.board[coords.row][coords.col] === "x") {
       const ship = getShip(coords, computer.gameboard.ships);
 
-      if (ship.isSunk())
+      if (ship.isSunk()) {
         updateMultipleBoxes(
           getAroundCoords(
             {
@@ -61,17 +62,20 @@ export const handleBoardClick = (args) => {
           computer.gameboard.board,
         );
 
+        if (computer.gameboard.areAllShipsSunk())
+          createWinnerLayout(player.name);
+      }
+
       return;
     }
 
+    console.log(computer.gameboard.board);
+
     updateCurrentPlayerTurn(computer.name);
-    player.turn = false;
+    computer.turn = true;
 
     setTimeout(() => {
-      computer.attackRandomSpot(player.gameboard, playerBoard);
-
-      updateCurrentPlayerTurn(player.name);
-      player.turn = true;
+      computer.attackRandomSpot(player, playerBoard);
     }, 400);
   }
 };
@@ -242,6 +246,7 @@ export const handleStartBattle = (shipPlacement) => {
 
   const computer = new Player();
   computer.name = "Computer";
+  computer.turn = false;
 
   player.gameboard.board = [...shipPlacement.gameboard.board];
   player.gameboard.ships = [...shipPlacement.gameboard.ships];
