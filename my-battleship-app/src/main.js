@@ -1,18 +1,15 @@
 import "./styles.css";
 import { createPageLayout } from "./modules/UI/pageLayout";
 import { Player } from "./modules/player";
-import { handleNewGameClick } from "./modules/events";
 import { createMenu } from "./modules/UI/menu";
+import { appendNewGameEvent } from "./modules/append";
 
-const startGame = () => {
+export const startGame = () => {
   const shipPlacement = new Player();
 
-  createPageLayout();
   createMenu();
-
-  const newGameBtn = document.querySelector("#new-game");
-
-  newGameBtn.addEventListener("click", () => handleNewGameClick(shipPlacement));
+  appendNewGameEvent(shipPlacement);
 };
 
+createPageLayout();
 startGame();

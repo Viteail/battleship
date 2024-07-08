@@ -135,11 +135,13 @@ export class Player {
     let newCoords = [];
 
     for (let i = 0; i < coords.length; i++) {
+      console.log("monke", coords[i]);
       if (!isOutOfBoard(coords[i]) && !enemyBoard.hasBeenShot(coords[i]))
         newCoords.push(coords[i]);
     }
 
     coords = [...newCoords];
+    console.log("p", coords);
 
     const randomNumber = getRandomNumber(coords.length);
 

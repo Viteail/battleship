@@ -22,7 +22,9 @@ import {
 import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
-import { createWinnerLayout } from "./UI/winnerLayout";
+import { createWinnerLayout, removeWinnerLayout } from "./UI/winnerLayout";
+import { createMenu } from "./UI/menu";
+import { startGame } from "../main";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
@@ -259,4 +261,10 @@ export const handleStartBattle = (shipPlacement) => {
   displayShips(player, playerBoard);
 
   appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
+};
+
+export const handlePlayAgainClick = () => {
+  removeWinnerLayout();
+
+  startGame();
 };

@@ -4,6 +4,8 @@ import {
   handleBoardClick,
   handleRandomPlacement,
   handleFlipDirection,
+  handlePlayAgainClick,
+  handleNewGameClick,
 } from "./events";
 
 export const appendRandomEvent = (shipPlacement) => {
@@ -48,4 +50,16 @@ export const appendFlipEvent = (shipElm, ship, shipPlacement, count) => {
   shipElm.addEventListener("click", (e) =>
     handleFlipDirection(e.target.parentElement, ship, shipPlacement, count),
   );
+};
+
+export const appendPlayAgainEvent = () => {
+  const playAgainBtn = document.querySelector("#play-again");
+
+  playAgainBtn.addEventListener("click", handlePlayAgainClick);
+};
+
+export const appendNewGameEvent = (shipPlacement) => {
+  const newGameBtn = document.querySelector("#new-game");
+
+  newGameBtn.addEventListener("click", () => handleNewGameClick(shipPlacement));
 };
