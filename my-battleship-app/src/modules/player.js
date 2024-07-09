@@ -1,5 +1,6 @@
 import { setBoxColor, updateMultipleBoxes } from "./UI/box";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
+import { updateShipsAlive } from "./UI/shipsAlive";
 import { createWinnerLayout } from "./UI/winnerLayout";
 import { Gameboard } from "./gameboard";
 
@@ -188,6 +189,8 @@ export class Player {
         boxes,
         enemyBoard.board,
       );
+
+      updateShipsAlive(enemy.name);
 
       if (enemyBoard.areAllShipsSunk()) {
         createWinnerLayout(this.name);

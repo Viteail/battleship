@@ -23,8 +23,8 @@ import { createBattleLayout } from "./UI/battleLayout";
 import { Player } from "./player";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
 import { createWinnerLayout, removeWinnerLayout } from "./UI/winnerLayout";
-import { createMenu } from "./UI/menu";
 import { startGame } from "../main";
+import { updateShipsAlive } from "./UI/shipsAlive";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
@@ -63,6 +63,8 @@ export const handleBoardClick = (args) => {
           boxes,
           computer.gameboard.board,
         );
+
+        updateShipsAlive(computer.name);
 
         if (computer.gameboard.areAllShipsSunk())
           createWinnerLayout(player.name);
