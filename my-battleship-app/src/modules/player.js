@@ -9,6 +9,7 @@ import {
   getShip,
   isOutOfBoard,
   getAroundCoords,
+  convertCoordsToIndex,
 } from "./utils";
 
 export class Player {
@@ -16,12 +17,11 @@ export class Player {
     this.turn = true;
     this.gameboard = new Gameboard();
     this.name;
-    this.firstHit = false;
-    this.lastHit = false;
+    this.hits = [];
   }
 
   attackRandomSpot(enemy, boardElement) {
-    if (this.firstHit) return this.attackNearSpot(enemy, boardElement);
+    if (this.hits.length) return this.attackNearSpot(enemy, boardElement);
     const enemyBoard = enemy.gameboard;
     const randomNumber = getRandomNumber(100);
 
@@ -47,10 +47,12 @@ export class Player {
   }
 
   attackNearSpot(enemy, boardElement) {
-    if (this.lastHit) return this.attackRow(enemy, boardElement);
+    if (this.hits.length > 1) return this.attackRow(enemy, boardElement);
     const enemyBoard = enemy.gameboard;
 
-    const coords = { col: this.firstHit.col, row: this.firstHit.row };
+    const firstCoords = this.hits[0];
+
+    const coords = { col: firstCoords.col, row: firstCoords.row };
 
     let nearCoords = [
       { col: coords.col, row: coords.row - 1 },
@@ -101,47 +103,48 @@ export class Player {
   attackRow(enemy, boardElement) {
     const enemyBoard = enemy.gameboard;
 
+    const firstCoords = this.hits[0];
+    const lastCoords = this.hits[this.hits.length - 1];
+
     let coords = [
       {
         col:
-          this.firstHit.col === this.lastHit.col
-            ? this.firstHit.col
-            : this.firstHit.col > this.lastHit.col
-              ? this.firstHit.col + 1
-              : this.firstHit.col - 1,
+          firstCoords.col === lastCoords.col
+            ? firstCoords.col
+            : firstCoords.col > lastCoords.col
+              ? firstCoords.col + 1
+              : firstCoords.col - 1,
         row:
-          this.firstHit.row === this.lastHit.row
-            ? this.firstHit.row
-            : this.firstHit.row > this.lastHit.row
-              ? this.firstHit.row + 1
-              : this.firstHit.row - 1,
+          firstCoords.row === lastCoords.row
+            ? firstCoords.row
+            : firstCoords.row > lastCoords.row
+              ? firstCoords.row + 1
+              : firstCoords.row - 1,
       },
       {
         col:
-          this.firstHit.col === this.lastHit.col
-            ? this.firstHit.col
-            : this.firstHit.col > this.lastHit.col
-              ? this.lastHit.col - 1
-              : this.lastHit.col + 1,
+          firstCoords.col === lastCoords.col
+            ? firstCoords.col
+            : firstCoords.col > lastCoords.col
+              ? lastCoords.col - 1
+              : lastCoords.col + 1,
         row:
-          this.firstHit.row === this.lastHit.row
-            ? this.firstHit.row
-            : this.firstHit.row > this.lastHit.row
-              ? this.lastHit.row - 1
-              : this.lastHit.row + 1,
+          firstCoords.row === lastCoords.row
+            ? firstCoords.row
+            : firstCoords.row > lastCoords.row
+              ? lastCoords.row - 1
+              : lastCoords.row + 1,
       },
     ];
 
     let newCoords = [];
 
     for (let i = 0; i < coords.length; i++) {
-      console.log("monke", coords[i]);
       if (!isOutOfBoard(coords[i]) && !enemyBoard.hasBeenShot(coords[i]))
         newCoords.push(coords[i]);
     }
 
     coords = [...newCoords];
-    console.log("p", coords);
 
     const randomNumber = getRandomNumber(coords.length);
 
@@ -192,11 +195,13 @@ export class Player {
         return;
       }
 
-      this.firstHit = false;
-      this.lastHit = false;
+      this.hits = [];
     } else {
-      if (this.firstHit) this.lastHit = { ...coords };
-      else this.firstHit = { ...coords };
+      this.hits.push(coords);
+
+      this.hits.sort(
+        (a, b) => convertCoordsToIndex(a) - convertCoordsToIndex(b),
+      );
     }
 
     setTimeout(() => {
