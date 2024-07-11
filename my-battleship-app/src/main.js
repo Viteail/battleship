@@ -7,9 +7,17 @@ import { appendNewGameEvent } from "./modules/append";
 export const startGame = () => {
   const shipPlacement = new Player();
 
-  createMenu();
   appendNewGameEvent(shipPlacement);
 };
 
-createPageLayout();
-startGame();
+const initPage = () => {
+  createPageLayout();
+
+  const content = document.querySelector("#content");
+
+  content.innerHTML = createMenu();
+
+  startGame();
+};
+
+initPage();

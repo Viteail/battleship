@@ -17,6 +17,7 @@ import {
   appendRandomEvent,
   appendComputerBoardEvent,
   appendFlipEvent,
+  appendMenuEvent,
 } from "./append";
 
 import { createBattleLayout } from "./UI/battleLayout";
@@ -25,6 +26,8 @@ import { updateCurrentPlayerTurn } from "./UI/playerTurn";
 import { createWinnerLayout, removeWinnerLayout } from "./UI/winnerLayout";
 import { startGame } from "../main";
 import { updateShipsAlive } from "./UI/shipsAlive";
+import { createMenu, styleMenu } from "./UI/menu";
+import { removeMenuEvent } from "./removeEvent";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
@@ -86,6 +89,9 @@ export const handleBoardClick = (args) => {
 
 export const handleNewGameClick = (shipPlacement) => {
   const content = document.querySelector("#content");
+
+  removeMenuEvent();
+
   createShipPlacementBoard(content);
 
   appendDropEvents(shipPlacement);
@@ -263,10 +269,24 @@ export const handleStartBattle = (shipPlacement) => {
   displayShips(player, playerBoard);
 
   appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
+
+  appendMenuEvent();
 };
 
 export const handlePlayAgainClick = () => {
+  const content = document.querySelector("#content");
+
   removeWinnerLayout();
 
+  content.innerHTML = createMenu();
+
+  startGame();
+};
+
+export const handleMenuClick = () => {
+  const content = document.querySelector("#content");
+  content.innerHTML += createMenu();
+
+  styleMenu();
   startGame();
 };

@@ -6,6 +6,7 @@ import {
   handleFlipDirection,
   handlePlayAgainClick,
   handleNewGameClick,
+  handleMenuClick,
 } from "./events";
 
 export const appendRandomEvent = (shipPlacement) => {
@@ -62,4 +63,10 @@ export const appendNewGameEvent = (shipPlacement) => {
   const newGameBtn = document.querySelector("#new-game");
 
   newGameBtn.addEventListener("click", () => handleNewGameClick(shipPlacement));
+};
+
+export const appendMenuEvent = () => {
+  const menuBtn = document.querySelector("#menu-btn");
+
+  menuBtn.addEventListener("click", handleMenuClick);
 };
