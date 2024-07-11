@@ -6,7 +6,7 @@ export const createMenu = () =>
       <button id='new-game' class='text-3xl'>New Game</button>
     </div>
     <div>
-      <button id='resume' class='text-2xl'>Resume</button>
+      <button id='resume' class='text-2xl opacity-50 cursor-default'>Resume</button>
     </div>
   </div>
 </div>
@@ -26,4 +26,11 @@ export const styleMenu = () => {
     "justify-center",
     "rounded-lg",
   );
+};
+
+export const styleResumeBtn = () => {
+  const resumeBtn = document.querySelector("#resume");
+
+  resumeBtn.classList.remove("opacity-50", "cursor-default");
+  resumeBtn.classList.add("cursor-pointer");
 };

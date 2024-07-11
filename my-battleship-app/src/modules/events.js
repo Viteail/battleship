@@ -18,6 +18,7 @@ import {
   appendComputerBoardEvent,
   appendFlipEvent,
   appendMenuEvent,
+  appendResumeEvent,
 } from "./append";
 
 import { createBattleLayout } from "./UI/battleLayout";
@@ -26,10 +27,11 @@ import { updateCurrentPlayerTurn } from "./UI/playerTurn";
 import { createWinnerLayout, removeWinnerLayout } from "./UI/winnerLayout";
 import { startGame } from "../main";
 import { updateShipsAlive } from "./UI/shipsAlive";
-import { createMenu, styleMenu } from "./UI/menu";
+import { createMenu, styleMenu, styleResumeBtn } from "./UI/menu";
 import { removeMenuEvent } from "./removeEvent";
 
 export const handleBoardClick = (args) => {
+  console.log("pyla");
   const { e, computerBoard, computer, player, playerBoard } = args;
   if (e.target === computerBoard || computer.turn) return;
 
@@ -283,10 +285,27 @@ export const handlePlayAgainClick = () => {
   startGame();
 };
 
+export const handleResumeClick = () => {
+  const content = document.querySelector("#content");
+  const modal = document.querySelector("#modal-menu");
+
+  content.removeChild(modal);
+};
+
 export const handleMenuClick = () => {
   const content = document.querySelector("#content");
-  content.innerHTML += createMenu();
+
+  const parser = new DOMParser();
+  const menuElm = parser
+    .parseFromString(createMenu(), "text/html")
+    .querySelector("#modal-menu");
+
+  content.appendChild(menuElm);
 
   styleMenu();
+
+  appendResumeEvent();
+  styleResumeBtn();
+
   startGame();
 };
