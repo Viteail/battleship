@@ -12,7 +12,7 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
 
   for (let i = 0; i < ship.length; i++) {
     parts += `
-      <div id='l${ship.length}-${count}-${i}' class='w-[2.47rem] h-[2.47rem]'></div>
+      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10'></div>
     `;
   }
 
