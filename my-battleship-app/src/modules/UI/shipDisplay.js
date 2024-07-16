@@ -12,12 +12,16 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
 
   for (let i = 0; i < ship.length; i++) {
     parts += `
-      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10 border border-slate-300'></div>
+      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10 border border-slate-300 bg-blue-50'></div>
     `;
   }
 
-  boxes[boxIndex].innerHTML = `
-    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-blue-600 bg-blue-100 bg-opacity-50 z-10'>
+  const boxElm = boxes[boxIndex];
+
+  boxElm.classList.remove("hover:bg-slate-100");
+
+  boxElm.innerHTML = `
+    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-blue-600 z-10'>
       ${parts}
     </div> 
   `;

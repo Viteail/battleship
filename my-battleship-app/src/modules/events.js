@@ -31,7 +31,6 @@ import { createMenu, styleMenu, styleResumeBtn } from "./UI/menu";
 import { removeMenuEvent } from "./removeEvent";
 
 export const handleBoardClick = (args) => {
-  console.log("pyla");
   const { e, computerBoard, computer, player, playerBoard } = args;
   if (e.target === computerBoard || computer.turn) return;
 
@@ -43,10 +42,7 @@ export const handleBoardClick = (args) => {
   if (!computer.gameboard.hasBeenShot(coords)) {
     computer.gameboard.receiveAttack(coords);
 
-    setBoxColor(
-      boxes[boxIndex],
-      computer.gameboard.board[coords.row][coords.col],
-    );
+    setBoxColor(coords, computerBoard, computer.gameboard);
 
     if (computer.gameboard.board[coords.row][coords.col] === "x") {
       const ship = getShip(coords, computer.gameboard.ships);
@@ -65,8 +61,8 @@ export const handleBoardClick = (args) => {
             },
             ship,
           ),
-          boxes,
-          computer.gameboard.board,
+          computerBoard,
+          computer.gameboard,
         );
 
         updateShipsAlive(computer.name);
