@@ -9,7 +9,7 @@ export const generateBoxes = () => {
   let boxes = "";
 
   for (let i = 0; i < 100; i++) {
-    boxes += `<div class='border border-slate-300 cursor-pointer hover:bg-slate-100'></div>`;
+    boxes += `<div class='border border-sky-100 cursor-pointer hover:bg-slate-100'></div>`;
   }
 
   return boxes;
@@ -35,9 +35,9 @@ export const setBoxColor = (coords, boardElm, gameboard) => {
 
       const shipChildElm = shipElm.children[index];
 
-      shipChildElm.classList.add("bg-red-500");
-    } else boxElm.classList.add("bg-red-500");
-  } else boxElm.classList.add("bg-sky-300");
+      shipChildElm.classList.add("bg-red-400");
+    } else boxElm.classList.add("bg-red-400");
+  } else boxElm.classList.add("bg-sky-200");
 };
 
 export const updateMultipleBoxes = (coords, boardElm, gameboard) => {

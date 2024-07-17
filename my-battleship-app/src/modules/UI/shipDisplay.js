@@ -12,7 +12,7 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
 
   for (let i = 0; i < ship.length; i++) {
     parts += `
-      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10 border border-slate-300 bg-blue-50'></div>
+      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10 border border-sky-200 bg-blue-50'></div>
     `;
   }
 
@@ -72,14 +72,14 @@ export const displayDestroyedShip = (boardElm, ship) => {
   let parts = "";
 
   for (let i = 0; i < ship.length; i++) {
-    parts += '<div class="w-10 h-10 border border-slate-300 bg-red-700"></div>';
+    parts += '<div class="w-10 h-10 border border-sky-200 bg-red-600"></div>';
   }
 
   const boxElm = boardElm.children[convertCoordsToIndex(ship.position[0])];
   const verticalClass = vertical ? "flex-col" : "";
 
   boxElm.innerHTML = `
-  <div class='absolute flex ${verticalClass} cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-red-950 z-10'>
+  <div class='absolute flex ${verticalClass} cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-red-800 z-10'>
     ${parts}
   </div>  
 `;
