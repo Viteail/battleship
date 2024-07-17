@@ -1,5 +1,6 @@
 import { setBoxColor, updateMultipleBoxes } from "./UI/box";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
+import { displayDestroyedShip } from "./UI/shipDisplay";
 import { updateShipsAlive } from "./UI/shipsAlive";
 import { createWinnerLayout } from "./UI/winnerLayout";
 import { Gameboard } from "./gameboard";
@@ -159,6 +160,8 @@ export class Player {
     const ship = getShip(coords, enemyBoard.ships);
 
     if (ship.isSunk()) {
+      displayDestroyedShip(enemyBoardElm, ship);
+
       updateMultipleBoxes(
         getAroundCoords(
           {

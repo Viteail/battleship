@@ -9,7 +9,12 @@ import {
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
-import { displayShip, displayShips, removeShip } from "./UI/shipDisplay";
+import {
+  displayDestroyedShip,
+  displayShip,
+  displayShips,
+  removeShip,
+} from "./UI/shipDisplay";
 
 import {
   appendResetEvent,
@@ -48,6 +53,8 @@ export const handleBoardClick = (args) => {
       const ship = getShip(coords, computer.gameboard.ships);
 
       if (ship.isSunk()) {
+        displayDestroyedShip(computerBoard, ship);
+
         updateMultipleBoxes(
           getAroundCoords(
             {

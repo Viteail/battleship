@@ -62,3 +62,25 @@ export const generateParts = (length) => {
 
   return parts;
 };
+
+export const displayDestroyedShip = (boardElm, ship) => {
+  const vertical =
+    ship.position.length > 1 && ship.position[0].row !== ship.position[1].row
+      ? true
+      : false;
+
+  let parts = "";
+
+  for (let i = 0; i < ship.length; i++) {
+    parts += '<div class="w-10 h-10 border border-slate-300 bg-red-700"></div>';
+  }
+
+  const boxElm = boardElm.children[convertCoordsToIndex(ship.position[0])];
+  const verticalClass = vertical ? "flex-col" : "";
+
+  boxElm.innerHTML = `
+  <div class='absolute flex ${verticalClass} cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-red-950 z-10'>
+    ${parts}
+  </div>  
+`;
+};
