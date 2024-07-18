@@ -1,4 +1,4 @@
-import { setBoxColor, updateMultipleBoxes } from "./UI/box";
+import { addBoxesHoverClass, setBoxColor, updateMultipleBoxes } from "./UI/box";
 import {
   convertIndexToCoords,
   getAroundCoords,
@@ -37,7 +37,12 @@ import { removeMenuEvent } from "./removeEvent";
 
 export const handleBoardClick = (args) => {
   const { e, computerBoard, computer, player, playerBoard } = args;
-  if (e.target === computerBoard || computer.turn) return;
+  if (
+    e.target === computerBoard ||
+    e.target.parentElement !== computerBoard ||
+    computer.turn
+  )
+    return;
 
   const boxes = Array.from(computerBoard.children);
   const boxIndex = boxes.indexOf(e.target);
@@ -274,6 +279,7 @@ export const handleStartBattle = (shipPlacement) => {
   displayShips(player, playerBoard);
 
   appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
+  addBoxesHoverClass(computerBoard);
 
   appendMenuEvent();
 };

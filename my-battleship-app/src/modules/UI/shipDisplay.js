@@ -17,20 +17,15 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
   }
 
   const boxElm = boxes[boxIndex];
+  const verticalClass = vertical ? "flex-col" : "";
 
   boxElm.classList.remove("hover:bg-slate-100");
 
   boxElm.innerHTML = `
-    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-blue-600 z-10'>
+    <div id='l${ship.length}-${count}' class='absolute flex ${verticalClass} mt-[-1px] ml-[-1px] outline outline-2 outline-blue-600 z-10'>
       ${parts}
     </div> 
   `;
-
-  const shipStartPart = document.querySelector(`#l${ship.length}-${count}`);
-
-  if (vertical) {
-    shipStartPart.classList.add("flex-col");
-  } else shipStartPart.classList.remove("flex-col");
 };
 
 export const displayShips = (player, boardElm) => {
@@ -79,7 +74,7 @@ export const displayDestroyedShip = (boardElm, ship) => {
   const verticalClass = vertical ? "flex-col" : "";
 
   boxElm.innerHTML = `
-  <div class='absolute flex ${verticalClass} cursor-pointer mt-[-1px] ml-[-1px] outline outline-2 outline-red-800 z-10'>
+  <div class='absolute flex ${verticalClass} mt-[-1px] ml-[-1px] outline outline-2 outline-red-800 z-10'>
     ${parts}
   </div>  
 `;
