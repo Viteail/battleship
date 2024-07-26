@@ -3,6 +3,8 @@ import { convertCoordsToIndex } from "../utils";
 export const displayShip = (boxIndex, ship, count, boardElm) => {
   const boxes = Array.from(boardElm.children);
 
+  console.log(boxIndex, ship);
+
   const vertical =
     ship.position.length > 1 && ship.position[0].row !== ship.position[1].row
       ? true
@@ -22,7 +24,7 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
   boxElm.classList.remove("hover:bg-slate-100");
 
   boxElm.innerHTML = `
-    <div id='l${ship.length}-${count}' class='absolute flex ${verticalClass} mt-[-1px] ml-[-1px] outline outline-2 outline-blue-600 z-10'>
+    <div id='l${ship.length}-${count}' class='absolute flex ${verticalClass} mt-[-3px] ml-[-3px] border-2 border-blue-600 z-10'>
       ${parts}
     </div> 
   `;
@@ -74,7 +76,7 @@ export const displayDestroyedShip = (boardElm, ship) => {
   const verticalClass = vertical ? "flex-col" : "";
 
   boxElm.innerHTML = `
-  <div class='absolute flex ${verticalClass} mt-[-1px] ml-[-1px] outline outline-2 outline-red-800 z-10'>
+  <div class='absolute flex ${verticalClass} mt-[-3px] ml-[-3px] border-2 border-red-800 z-10'>
     ${parts}
   </div>  
 `;

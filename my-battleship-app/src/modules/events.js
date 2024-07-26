@@ -117,6 +117,7 @@ export const allowDrop = (e) => {
 };
 
 export const drag = (e) => {
+  console.log(e);
   const { clientX, clientY } = e;
   const elementAtPoint = document.elementFromPoint(clientX, clientY);
 
@@ -129,6 +130,8 @@ export const drop = (e, shipPlacement) => {
 
   const data = e.dataTransfer.getData("id");
   const child = e.dataTransfer.getData("child");
+
+  console.log(data, child);
 
   if (data === "") return;
 

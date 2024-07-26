@@ -5,14 +5,18 @@ export const appendDragEvent = (elm) => {
   elm.classList.add("draggable-ship");
 
   elm.addEventListener("dragstart", (e) => {
+    console.log(elm, e.target);
+    //
     // const preview = elm.cloneNode(true);
-    // // preview.style.width = `${elm.offsetWidth}px`;
-    // // preview.style.height = `${elm.offsetHeight}px`;
+    // preview.style.width = `${elm.offsetWidth}px`;
+    // preview.style.height = `${elm.offsetHeight + 4}px`;
     // preview.style.border = "2px solid blue";
     //
     // document.body.appendChild(preview);
     // e.dataTransfer.setDragImage(preview, 0, 0);
-
+    // if (!elm.classList.contains("draggable-ship")) {
+    //   e.preventDefault();
+    // }
     drag(e);
   });
 };

@@ -49,8 +49,8 @@ export const appendComputerBoardEvent = (
 };
 
 export const appendFlipEvent = (shipElm, ship, shipPlacement, count) => {
-  shipElm.addEventListener("click", (e) =>
-    handleFlipDirection(e.target.parentElement, ship, shipPlacement, count),
+  shipElm.addEventListener("click", () =>
+    handleFlipDirection(shipElm, ship, shipPlacement, count),
   );
 };
 
