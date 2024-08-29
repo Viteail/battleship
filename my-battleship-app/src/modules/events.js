@@ -86,8 +86,6 @@ export const handleBoardClick = (args) => {
       return;
     }
 
-    console.log(computer.gameboard.board);
-
     updateCurrentPlayerTurn(computer.name);
     computer.turn = true;
 
@@ -112,26 +110,11 @@ export const handleNewGameClick = (shipPlacement) => {
   appendStartEvent(shipPlacement);
 };
 
-export const allowDrop = (e) => {
-  e.preventDefault();
-};
-
-export const drag = (e) => {
-  console.log(e);
-  const { clientX, clientY } = e;
-  const elementAtPoint = document.elementFromPoint(clientX, clientY);
-
-  e.dataTransfer.setData("id", e.target.id);
-  e.dataTransfer.setData("child", elementAtPoint.id);
-};
-
 export const drop = (e, shipPlacement) => {
   e.preventDefault();
 
-  const data = e.dataTransfer.getData("id");
-  const child = e.dataTransfer.getData("child");
-
-  console.log(data, child);
+  const data = e.dataTransfer.getData("parent-id");
+  const child = e.dataTransfer.getData("child-id");
 
   if (data === "") return;
 
@@ -141,6 +124,9 @@ export const drop = (e, shipPlacement) => {
   if (!shipElm.classList.contains("draggable-ship")) return;
   const shipPlacementElm = document.querySelector("#ship-placement-board");
 
+  const boxes = Array.from(shipPlacementElm.children);
+  boxes.forEach((box) => box.classList.remove("bg-slate-300"));
+
   let boxElm = e.target;
 
   if (boxElm.parentElement !== shipPlacementElm) {
@@ -148,7 +134,6 @@ export const drop = (e, shipPlacement) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const boxes = Array.from(shipPlacementElm.children);
     boxes.forEach((box) => {
       const boxRect = box.getBoundingClientRect();
       if (

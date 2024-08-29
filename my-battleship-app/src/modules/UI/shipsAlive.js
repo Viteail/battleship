@@ -5,7 +5,6 @@ export const updateShipsAlive = (player) => {
   const shipsAliveText = document.querySelector(
     `#${player.toLowerCase()}-ships-alive`,
   );
-  console.log(shipsAliveText);
 
   shipsAliveText.textContent = Number(shipsAliveText.textContent) - 1;
 };

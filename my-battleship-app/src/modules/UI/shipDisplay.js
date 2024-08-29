@@ -3,8 +3,6 @@ import { convertCoordsToIndex } from "../utils";
 export const displayShip = (boxIndex, ship, count, boardElm) => {
   const boxes = Array.from(boardElm.children);
 
-  console.log(boxIndex, ship);
-
   const vertical =
     ship.position.length > 1 && ship.position[0].row !== ship.position[1].row
       ? true
