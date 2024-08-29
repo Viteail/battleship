@@ -1,4 +1,4 @@
-import { drop, allowDrop } from "./events";
+import { drop } from "./events";
 import {
   convertCoordsToIndex,
   convertIndexToCoords,
@@ -14,7 +14,6 @@ export const appendDropEvents = (shipPlacement) => {
   const shipPlacementElm = document.querySelector("#ship-placement-board");
 
   shipPlacementElm.addEventListener("drop", (e) => drop(e, shipPlacement));
-  shipPlacementElm.addEventListener("dragover", (e) => allowDrop(e));
 };
 
 export const dropShip = (args) => {
@@ -64,7 +63,6 @@ export const dropShip = (args) => {
 
     countElm.textContent = `${countElm.textContent[0] - 1}x`;
   }
-  console.log(shipPlacement.gameboard.board);
 };
 
 export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
@@ -118,7 +116,6 @@ export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
     removeShip(initialBox, shipElm);
 
     shipPlacement.gameboard.placeShip(ship, directionalCoords);
-    console.log(ship, directionalCoords);
 
     displayShip(shipStartBoxIndex, ship, count, shipPlacementElm);
 
@@ -129,8 +126,6 @@ export const redropShip = (boxElm, shipElm, childElm, shipPlacement) => {
       shipPlacement,
       count,
     );
-
-    console.log(shipPlacement.gameboard.board);
   } else {
     shipPlacement.gameboard.placeShip(ship, {
       col: initialCoords.col,

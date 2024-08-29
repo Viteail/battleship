@@ -12,21 +12,20 @@ export const displayShip = (boxIndex, ship, count, boardElm) => {
 
   for (let i = 0; i < ship.length; i++) {
     parts += `
-      <div id='l${ship.length}-${count}-${i}' class='w-[2.47rem] h-[2.47rem]'></div>
+      <div id='l${ship.length}-${count}-${i}' class='w-10 h-10 border border-sky-200 bg-blue-50'></div>
     `;
   }
 
-  boxes[boxIndex].innerHTML = `
-    <div id='l${ship.length}-${count}' class='absolute flex cursor-pointer outline outline-2 outline-blue-600 bg-blue-100 bg-opacity-50 z-10'>
+  const boxElm = boxes[boxIndex];
+  const verticalClass = vertical ? "flex-col" : "";
+
+  boxElm.classList.remove("hover:bg-slate-100");
+
+  boxElm.innerHTML = `
+    <div id='l${ship.length}-${count}' class='absolute flex ${verticalClass} mt-[-3px] ml-[-3px] border-2 border-blue-600 z-10'>
       ${parts}
     </div> 
   `;
-
-  const shipStartPart = document.querySelector(`#l${ship.length}-${count}`);
-
-  if (vertical) {
-    shipStartPart.classList.add("flex-col");
-  } else shipStartPart.classList.remove("flex-col");
 };
 
 export const displayShips = (player, boardElm) => {
@@ -57,4 +56,26 @@ export const generateParts = (length) => {
   }
 
   return parts;
+};
+
+export const displayDestroyedShip = (boardElm, ship) => {
+  const vertical =
+    ship.position.length > 1 && ship.position[0].row !== ship.position[1].row
+      ? true
+      : false;
+
+  let parts = "";
+
+  for (let i = 0; i < ship.length; i++) {
+    parts += '<div class="w-10 h-10 border border-sky-200 bg-red-600"></div>';
+  }
+
+  const boxElm = boardElm.children[convertCoordsToIndex(ship.position[0])];
+  const verticalClass = vertical ? "flex-col" : "";
+
+  boxElm.innerHTML = `
+  <div class='absolute flex ${verticalClass} mt-[-3px] ml-[-3px] border-2 border-red-800 z-10'>
+    ${parts}
+  </div>  
+`;
 };

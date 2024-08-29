@@ -1,5 +1,6 @@
 import { setBoxColor, updateMultipleBoxes } from "./UI/box";
 import { updateCurrentPlayerTurn } from "./UI/playerTurn";
+import { displayDestroyedShip } from "./UI/shipDisplay";
 import { updateShipsAlive } from "./UI/shipsAlive";
 import { createWinnerLayout } from "./UI/winnerLayout";
 import { Gameboard } from "./gameboard";
@@ -21,34 +22,31 @@ export class Player {
     this.hits = [];
   }
 
-  attackRandomSpot(enemy, boardElement) {
-    if (this.hits.length) return this.attackNearSpot(enemy, boardElement);
+  attackRandomSpot(enemy, enemyBoardElm) {
+    if (this.hits.length) return this.attackNearSpot(enemy, enemyBoardElm);
     const enemyBoard = enemy.gameboard;
     const randomNumber = getRandomNumber(100);
-
-    const boxes = Array.from(boardElement.children);
-    const box = Array.from(boardElement.children)[randomNumber];
 
     const coords = convertIndexToCoords(randomNumber);
 
     if (enemyBoard.hasBeenShot(coords)) {
-      return this.attackRandomSpot(enemy, boardElement);
+      return this.attackRandomSpot(enemy, enemyBoardElm);
     }
 
     enemyBoard.receiveAttack(coords);
 
-    setBoxColor(box, enemyBoard.board[coords.row][coords.col]);
+    setBoxColor(coords, enemyBoardElm, enemyBoard);
 
     if (enemyBoard.board[coords.row][coords.col] === "x")
-      this.processHit(coords, enemy, boxes, boardElement);
+      this.processHit(coords, enemy, enemyBoardElm);
     else {
       this.turn = false;
       updateCurrentPlayerTurn(enemy.name);
     }
   }
 
-  attackNearSpot(enemy, boardElement) {
-    if (this.hits.length > 1) return this.attackRow(enemy, boardElement);
+  attackNearSpot(enemy, enemyBoardElm) {
+    if (this.hits.length > 1) return this.attackRow(enemy, enemyBoardElm);
     const enemyBoard = enemy.gameboard;
 
     const firstCoords = this.hits[0];
@@ -78,30 +76,23 @@ export class Player {
 
     enemyBoard.receiveAttack(nearCoords[randomNumber]);
 
-    const boxes = Array.from(boardElement.children);
+    const boxes = Array.from(enemyBoardElm.children);
 
-    setBoxColor(
-      boxes[
-        Number("" + nearCoords[randomNumber].row + nearCoords[randomNumber].col)
-      ],
-      enemyBoard.board[nearCoords[randomNumber].row][
-        nearCoords[randomNumber].col
-      ],
-    );
+    setBoxColor(nearCoords[randomNumber], enemyBoardElm, enemyBoard);
 
     if (
       enemyBoard.board[nearCoords[randomNumber].row][
         nearCoords[randomNumber].col
       ] === "x"
     )
-      this.processHit(nearCoords[randomNumber], enemy, boxes, boardElement);
+      this.processHit(nearCoords[randomNumber], enemy, enemyBoardElm);
     else {
       this.turn = false;
       updateCurrentPlayerTurn(enemy.name);
     }
   }
 
-  attackRow(enemy, boardElement) {
+  attackRow(enemy, enemyBoardElm) {
     const enemyBoard = enemy.gameboard;
 
     const firstCoords = this.hits[0];
@@ -151,29 +142,26 @@ export class Player {
 
     enemyBoard.receiveAttack(coords[randomNumber]);
 
-    const boxes = Array.from(boardElement.children);
-
-    setBoxColor(
-      boxes[Number("" + coords[randomNumber].row + coords[randomNumber].col)],
-      enemyBoard.board[coords[randomNumber].row][coords[randomNumber].col],
-    );
+    setBoxColor(coords[randomNumber], enemyBoardElm, enemyBoard);
 
     if (
       enemyBoard.board[coords[randomNumber].row][coords[randomNumber].col] ===
       "x"
     )
-      this.processHit(coords[randomNumber], enemy, boxes, boardElement);
+      this.processHit(coords[randomNumber], enemy, enemyBoardElm);
     else {
       this.turn = false;
       updateCurrentPlayerTurn(enemy.name);
     }
   }
 
-  processHit(coords, enemy, boxes, boardElement) {
+  processHit(coords, enemy, enemyBoardElm) {
     const enemyBoard = enemy.gameboard;
     const ship = getShip(coords, enemyBoard.ships);
 
     if (ship.isSunk()) {
+      displayDestroyedShip(enemyBoardElm, ship);
+
       updateMultipleBoxes(
         getAroundCoords(
           {
@@ -186,8 +174,8 @@ export class Player {
           },
           ship,
         ),
-        boxes,
-        enemyBoard.board,
+        enemyBoardElm,
+        enemyBoard,
       );
 
       updateShipsAlive(enemy.name);
@@ -208,7 +196,7 @@ export class Player {
     }
 
     setTimeout(() => {
-      this.attackRandomSpot(enemy, boardElement);
+      this.attackRandomSpot(enemy, enemyBoardElm);
     }, 400);
   }
 }

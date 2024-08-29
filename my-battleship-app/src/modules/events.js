@@ -1,4 +1,4 @@
-import { setBoxColor, updateMultipleBoxes } from "./UI/box";
+import { addBoxesHoverClass, setBoxColor, updateMultipleBoxes } from "./UI/box";
 import {
   convertIndexToCoords,
   getAroundCoords,
@@ -9,7 +9,12 @@ import {
 import { createShipPlacementBoard } from "./UI/shipPlacementBoard";
 import { appendDragEvent, appendDragEvents } from "./dragging";
 import { appendDropEvents, dropShip, redropShip } from "./dropping";
-import { displayShip, displayShips, removeShip } from "./UI/shipDisplay";
+import {
+  displayDestroyedShip,
+  displayShip,
+  displayShips,
+  removeShip,
+} from "./UI/shipDisplay";
 
 import {
   appendResetEvent,
@@ -31,9 +36,13 @@ import { createMenu, styleMenu, styleResumeBtn } from "./UI/menu";
 import { removeMenuEvent } from "./removeEvent";
 
 export const handleBoardClick = (args) => {
-  console.log("pyla");
   const { e, computerBoard, computer, player, playerBoard } = args;
-  if (e.target === computerBoard || computer.turn) return;
+  if (
+    e.target === computerBoard ||
+    e.target.parentElement !== computerBoard ||
+    computer.turn
+  )
+    return;
 
   const boxes = Array.from(computerBoard.children);
   const boxIndex = boxes.indexOf(e.target);
@@ -43,15 +52,14 @@ export const handleBoardClick = (args) => {
   if (!computer.gameboard.hasBeenShot(coords)) {
     computer.gameboard.receiveAttack(coords);
 
-    setBoxColor(
-      boxes[boxIndex],
-      computer.gameboard.board[coords.row][coords.col],
-    );
+    setBoxColor(coords, computerBoard, computer.gameboard);
 
     if (computer.gameboard.board[coords.row][coords.col] === "x") {
       const ship = getShip(coords, computer.gameboard.ships);
 
       if (ship.isSunk()) {
+        displayDestroyedShip(computerBoard, ship);
+
         updateMultipleBoxes(
           getAroundCoords(
             {
@@ -65,8 +73,8 @@ export const handleBoardClick = (args) => {
             },
             ship,
           ),
-          boxes,
-          computer.gameboard.board,
+          computerBoard,
+          computer.gameboard,
         );
 
         updateShipsAlive(computer.name);
@@ -77,8 +85,6 @@ export const handleBoardClick = (args) => {
 
       return;
     }
-
-    console.log(computer.gameboard.board);
 
     updateCurrentPlayerTurn(computer.name);
     computer.turn = true;
@@ -104,23 +110,11 @@ export const handleNewGameClick = (shipPlacement) => {
   appendStartEvent(shipPlacement);
 };
 
-export const allowDrop = (e) => {
-  e.preventDefault();
-};
-
-export const drag = (e) => {
-  const { clientX, clientY } = e;
-  const elementAtPoint = document.elementFromPoint(clientX, clientY);
-
-  e.dataTransfer.setData("id", e.target.id);
-  e.dataTransfer.setData("child", elementAtPoint.id);
-};
-
 export const drop = (e, shipPlacement) => {
   e.preventDefault();
 
-  const data = e.dataTransfer.getData("id");
-  const child = e.dataTransfer.getData("child");
+  const data = e.dataTransfer.getData("parent-id");
+  const child = e.dataTransfer.getData("child-id");
 
   if (data === "") return;
 
@@ -130,6 +124,9 @@ export const drop = (e, shipPlacement) => {
   if (!shipElm.classList.contains("draggable-ship")) return;
   const shipPlacementElm = document.querySelector("#ship-placement-board");
 
+  const boxes = Array.from(shipPlacementElm.children);
+  boxes.forEach((box) => box.classList.remove("bg-slate-300"));
+
   let boxElm = e.target;
 
   if (boxElm.parentElement !== shipPlacementElm) {
@@ -137,7 +134,6 @@ export const drop = (e, shipPlacement) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const boxes = Array.from(shipPlacementElm.children);
     boxes.forEach((box) => {
       const boxRect = box.getBoundingClientRect();
       if (
@@ -271,6 +267,7 @@ export const handleStartBattle = (shipPlacement) => {
   displayShips(player, playerBoard);
 
   appendComputerBoardEvent(computerBoard, computer, playerBoard, player);
+  addBoxesHoverClass(computerBoard);
 
   appendMenuEvent();
 };

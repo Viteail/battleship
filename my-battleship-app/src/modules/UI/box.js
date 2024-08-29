@@ -1,28 +1,53 @@
-import { convertCoordsToIndex, isOutOfBoard } from "../utils";
+import {
+  convertCoordsToIndex,
+  getShip,
+  getShipElm,
+  isOutOfBoard,
+} from "../utils";
 
 export const generateBoxes = () => {
   let boxes = "";
 
   for (let i = 0; i < 100; i++) {
-    boxes += `<div class='border border-blue-200 border cursor-pointer hover:bg-sky-100'></div>`;
+    boxes += `<div class='border border-sky-100'></div>`;
   }
 
   return boxes;
 };
 
-export const setBoxColor = (boxElm, box) => {
-  boxElm.classList.remove("bg-slate-700");
-  boxElm.classList.add(box === "x" ? "bg-red-500" : "bg-sky-300");
-
-  boxElm.classList.remove("hover:bg-sky-100");
+export const addBoxesHoverClass = (boardElm) => {
+  for (let i = 0; i < boardElm.children.length; i++) {
+    boardElm.children[i].classList.add("cursor-pointer", "hover:bg-slate-100");
+  }
 };
 
-export const updateMultipleBoxes = (coords, boxes, board) => {
+export const setBoxColor = (coords, boardElm, gameboard) => {
+  const box = gameboard.board[coords.row][coords.col];
+  const boxElm = boardElm.children[convertCoordsToIndex(coords)];
+
+  boxElm.classList.remove("hover:bg-slate-100", "cursor-pointer");
+
+  if (box === "x") {
+    const ship = getShip(coords, gameboard.ships);
+    const shipElm = getShipElm(boardElm, ship);
+
+    if (shipElm) {
+      const startPosition = ship.position[0];
+
+      const index =
+        coords.row === startPosition.row
+          ? coords.col - startPosition.col
+          : coords.row - startPosition.row;
+
+      const shipChildElm = shipElm.children[index];
+
+      shipChildElm.classList.add("bg-red-400");
+    } else boxElm.classList.add("bg-red-400");
+  } else boxElm.classList.add("bg-sky-200");
+};
+
+export const updateMultipleBoxes = (coords, boardElm, gameboard) => {
   for (let i = 0; i < coords.length; i++) {
-    if (!isOutOfBoard(coords[i]))
-      setBoxColor(
-        boxes[convertCoordsToIndex(coords[i])],
-        board[coords[i].row][coords[i].col],
-      );
+    if (!isOutOfBoard(coords[i])) setBoxColor(coords[i], boardElm, gameboard);
   }
 };
